@@ -22,11 +22,28 @@ jobs:
         run: |
           pip install -r requirements.txt  # Install Python dependencies
 
-      - name: Install Graphviz and check
+      - name: Install Graphviz
         run: |
-          echo "Updating packages..."
+          echo "Updating package list..."
           sudo apt-get update -y  # Update package list
           echo "Installing Graphviz..."
           sudo apt-get install -y graphviz  # Install Graphviz
-          echo "Graphviz version:"
-          dot -V  # Print the version of Graphviz to check if 
+          echo "Checking if Graphviz is installed..."
+          dot -V  # This should print the version of Graphviz
+
+      - name: Check Graphviz installation
+        run: |
+          echo "Running `which dot` to check for path..."
+          which dot  # This checks if the `dot` command is available
+          echo "Verifying Graphviz functionality..."
+          dot -V  # This should print the version if Graphviz is installed correctly
+
+      - name: Check system paths
+        run: |
+          echo "Checking system PATH..."
+          echo $PATH  # This will print the system PATH to check if dot is in the PATH
+
+      - name: Run Python script
+        run: |
+          echo "Running the Python script..."
+          python Infrastructure/generate_graph.py  # Run the Python script
