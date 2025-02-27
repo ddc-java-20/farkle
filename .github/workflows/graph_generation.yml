@@ -1,22 +1,22 @@
-name: Rubric Graph
+name: Generate Rubric Graph
 
 on:
   push:
     branches:
-      - mincfranc-patch-1  # This triggers the workflow when you push to this branch
+      - mincfranc-patch-1  # Trigger on push to this branch
 
 jobs:
   generate-graph:
-    runs-on: ubuntu-latest  # This specifies the operating system
+    runs-on: ubuntu-latest  # Using an Ubuntu machine
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2  # Checks out the repository
+        uses: actions/checkout@v2  # Checkout the code
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'  # Specify your Python version
+          python-version: '3.9'  # Python version to use
 
       - name: Install dependencies
         run: |
@@ -24,9 +24,15 @@ jobs:
 
       - name: Install Graphviz
         run: |
-          sudo apt-get update  # Update the package list
+          sudo apt-get update  # Update package list
           sudo apt-get install -y graphviz  # Install Graphviz
+          dot -V  # Check if Graphviz is installed successfully and print version
+
+      - name: Verify Graphviz installation
+        run: |
+          which dot  # This will show the path to the 'dot' command
+          dot -V  # Verify if the dot command works and print version
 
       - name: Run Python script
         run: |
-          python Infrastructure/generate_graph.py  # Run the script
+          python Infrastructure/generate_graph.py  # Run the Python script
