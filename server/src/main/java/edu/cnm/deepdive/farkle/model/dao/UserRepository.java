@@ -13,5 +13,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
   Optional<User> findByExternalKey(UUID externalKey);
 
-
+//  List<Game> getAllByuserIdWhereWinnerIdIsUser
+//  List<Game> getAllByuserIdWhereloserIdIsUser
+  // TODO: 3/9/2025 add more spring data queries
+//  @Query("SELECT u FROM User u ORDER BY u.")u
 }

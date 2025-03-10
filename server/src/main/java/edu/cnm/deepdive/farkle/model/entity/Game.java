@@ -19,7 +19,7 @@ import java.util.List;
 public class Game {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "game_id", nullable = false)
   private Long Id;
 

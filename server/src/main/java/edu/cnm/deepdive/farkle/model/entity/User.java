@@ -16,7 +16,7 @@ public class User {
 
   // Primary key  field
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_profile_id", nullable = false)
   private Long Id;
 

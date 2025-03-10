@@ -7,10 +7,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ import java.util.List;
 public class Roll {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "roll_id")
   private Long Id;
 
@@ -41,7 +43,20 @@ public class Roll {
   )
   private final List<Die> dice = new LinkedList<>();
 
+  //  creating many-to-one relationship with annotations
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "turn_id", nullable = false)
+  private Turn turn;
+
   //Getters and Setters
+  public Turn getTurn() {
+    return turn;
+  }
+
+  public void setTurn(Turn turn) {
+    this.turn = turn;
+  }
+
   public Long getId() {
     return Id;
   }
