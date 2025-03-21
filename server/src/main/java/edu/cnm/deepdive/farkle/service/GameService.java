@@ -1,11 +1,13 @@
 package edu.cnm.deepdive.farkle.service;
 
 import edu.cnm.deepdive.farkle.model.dao.GameRepository;
+import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.entity.Game;
 import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,7 +40,19 @@ public class GameService implements AbstractGameService {
               return gameRepository.save(game);
             })
         );
-    // Do we need to do .findByUserProfile?
+  }
+
+  @Override
+  public void freezeOrContinue(RollAction action, UUID key, User user) {
+
+    // TODO: 3/21/25 Query game object with key and User
+    // TODO: 3/21/25 Look at most recent turn and most recent roll in game object
+    // TODO: 3/21/25 Validate whether the user IS the current user in turn
+    // TODO: 3/21/25 Validate what the user wants to do is valid according to the most recent roll
+    // TODO: 3/21/25 Compute the score that results from this action
+    // TODO: 3/21/25 Update the turn and roll entity instances and write to the database
+    // TODO: 3/21/25 Check if this turn puts the game in 'last round' state
+    // TODO: 3/21/25 If turn, advance to the next turn and user
   }
 
   @Override
