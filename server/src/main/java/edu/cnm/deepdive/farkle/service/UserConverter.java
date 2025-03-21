@@ -1,6 +1,6 @@
 package edu.cnm.deepdive.farkle.service;
 
-import edu.cnm.deepdive.farkle.model.entity.UserProfile;
+import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.Collection;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class UserConverter implements Converter<Jwt, UsernamePasswordAuthenticat
   public UsernamePasswordAuthenticationToken convert(Jwt source) {
     Collection<SimpleGrantedAuthority> grants =
         Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-    UserProfile user = userService.getOrCreate(source.getSubject(), source.getClaimAsString("name"));
+    User user = userService.getOrCreate(source.getSubject(), source.getClaimAsString("name"));
     return new UsernamePasswordAuthenticationToken(user, source.getTokenValue(), grants);
   }
 }

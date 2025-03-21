@@ -1,6 +1,6 @@
 package edu.cnm.deepdive.farkle.controller;
 
-import edu.cnm.deepdive.farkle.model.entity.UserProfile;
+import edu.cnm.deepdive.farkle.model.entity.User;
 import edu.cnm.deepdive.farkle.service.AbstractUserService;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +25,18 @@ public class UserController {
 
   @GetMapping(path = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
 
-  public UserProfile get() {
+  public User get() {
     return userService.getCurrent();
   }
 
   @PutMapping(path = "/me",
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserProfile put(@RequestBody UserProfile user) {
+  public User put(@RequestBody User user) {
     return userService.update(user);
   }
 
   @GetMapping(path = "/{externalKey}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserProfile get(@PathVariable UUID externalKey) {
+  public User get(@PathVariable UUID externalKey) {
     return userService.get(externalKey);
   }
 }
