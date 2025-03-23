@@ -7,6 +7,7 @@ import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,21 @@ public class GameService implements AbstractGameService {
         );
   }
 
+  // Query game object with key and User
   @Override
   public void freezeOrContinue(RollAction action, UUID key, User user) {
+//Use`gameRepository.findByExternalKey(key)` to find the game by its external key
+    //I created a method in gameRepository to findByExternalKey
+    Optional<Game> gameOptional = gameRepository.findByExternalKey(key);
+    if (gameOptional.isEmpty()) {
+      throw new IllegalArgumentException("Game not found with key: " + key);
+    }
+  //Verify the user is part of the game's players list
+  Game game = gameOptional.get();
+      if (!game.getPlayers().contains(user)) {
+        throw new IllegalArgumentException("User not part of this game");
+   }
+}
 
     // TODO: 3/21/25 Query game object with key and User
     // TODO: 3/21/25 Look at most recent turn and most recent roll in game object
@@ -53,7 +67,7 @@ public class GameService implements AbstractGameService {
     // TODO: 3/21/25 Update the turn and roll entity instances and write to the database
     // TODO: 3/21/25 Check if this turn puts the game in 'last round' state
     // TODO: 3/21/25 If turn, advance to the next turn and user
-  }
+
 
   @Override
   public Game getGame(User user) {

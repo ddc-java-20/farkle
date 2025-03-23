@@ -5,10 +5,10 @@ create sequence user_profile_seq start with 1 increment by 50;
 create table game
 (
     current_player_id bigint,
-    game_id           bigint                                 not null,
+    game_id           bigint not null,
     turn_id           bigint,
     winner_id         bigint,
-    external_key      uuid                                   not null unique,
+    external_key      uuid   not null unique,
     state             enum ('FINISHED','IN_PLAY','PRE_GAME') not null,
     primary key (game_id)
 );
@@ -30,8 +30,8 @@ create table roll
 );
 create table roll_die
 (
-    face_value integer not null, group
-    integer,
+    face_value integer not null,
+    group      integer,
     roll_id    bigint  not null
 );
 create table turn
@@ -53,21 +53,12 @@ create table user_profile
     display_name    varchar(255),
     primary key (user_profile_id)
 );
-alter table if exists game
-    add constraint FKeup4dd732pnlpjvhh9npcvrg foreign key (current_player_id) references user_profile;
-alter table if exists game
-    add constraint FKoaji90cp43q1p2v8u82lg76fg foreign key (turn_id) references turn;
-alter table if exists game
-    add constraint FKn7s1942q5h1109lb8houdtbai foreign key (winner_id) references user_profile;
-alter table if exists game_player
-    add constraint FK64n9da4vaij6uf1pyjknhk053 foreign key (player_id) references user_profile;
-alter table if exists game_player
-    add constraint FK8so14tnd5mqdjqabugc0cycxu foreign key (game_id) references game;
-alter table if exists roll
-    add constraint FKk1f68rwaqf0c5w6brh6c59rlr foreign key (turn_id) references turn;
-alter table if exists roll_die
-    add constraint FK27uspo9bf2ahsy3dknypc02hs foreign key (roll_id) references roll;
-alter table if exists turn
-    add constraint FKfnda1g6jd92jpiakpu2689pgf foreign key (game_id) references game;
-alter table if exists turn
-    add constraint FKi3rn9e2enjeyqhdv9kmsgo6xh foreign key (user_id) references user_profile;
+alter table if exists game add constraint FKeup4dd732pnlpjvhh9npcvrg foreign key (current_player_id) references user_profile;
+alter table if exists game add constraint FKoaji90cp43q1p2v8u82lg76fg foreign key (turn_id) references turn;
+alter table if exists game add constraint FKn7s1942q5h1109lb8houdtbai foreign key (winner_id) references user_profile;
+alter table if exists game_player add constraint FK64n9da4vaij6uf1pyjknhk053 foreign key (player_id) references user_profile;
+alter table if exists game_player add constraint FK8so14tnd5mqdjqabugc0cycxu foreign key (game_id) references game;
+alter table if exists roll add constraint FKk1f68rwaqf0c5w6brh6c59rlr foreign key (turn_id) references turn;
+alter table if exists roll_die add constraint FK27uspo9bf2ahsy3dknypc02hs foreign key (roll_id) references roll;
+alter table if exists turn add constraint FKfnda1g6jd92jpiakpu2689pgf foreign key (game_id) references game;
+alter table if exists turn add constraint FKi3rn9e2enjeyqhdv9kmsgo6xh foreign key (user_id) references user_profile;

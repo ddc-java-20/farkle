@@ -6,6 +6,7 @@ import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
@@ -15,6 +16,8 @@ public interface GameRepository extends JpaRepository<Game, Long> {
   Optional<Game> findByPlayersContainsAndStateIn(User player, Set<State> states);
 
   Optional<Game> findByState(State state);
+
+  Optional<Game> findByExternalKey(UUID externalKey);
 
 
 }
