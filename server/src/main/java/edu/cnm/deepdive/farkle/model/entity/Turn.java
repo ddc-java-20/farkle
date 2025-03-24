@@ -48,6 +48,8 @@ public class Turn {
   @JoinColumn(name = "user_id", nullable = false, updatable = false)
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private User user;
+  // TODO: 3/20/25 Add player who took turn
+  // TODO: 3/20/25 Consider adding timestamp
 
   @Column(nullable = false)
   @JsonProperty(access = Access.READ_ONLY)
