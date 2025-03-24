@@ -135,7 +135,7 @@ public class GameService implements AbstractGameService {
   }
 
   @Override
-  public Game getGame(User user) {
+  public Game getGame(User user, UUID key) {
     return null;
   }
 
