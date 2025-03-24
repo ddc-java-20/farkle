@@ -30,7 +30,7 @@ public class GameController {
   }
 
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Game post(){
+  public Game post() {
     return gameService.startOrJoin(userService.getCurrent());
   }
 
