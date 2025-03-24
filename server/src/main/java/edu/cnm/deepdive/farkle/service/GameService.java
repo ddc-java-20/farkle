@@ -9,18 +9,22 @@ import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.Turn;
 import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.random.RandomGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GameService implements AbstractGameService {
 
   private final GameRepository gameRepository;
+  private final RandomGenerator rng;
 
-  public GameService(GameRepository gameRepository) {
+  public GameService(GameRepository gameRepository, RandomGenerator rng) {
     this.gameRepository = gameRepository;
+    this.rng = rng;
   }
 
   @Override
@@ -33,9 +37,7 @@ public class GameService implements AbstractGameService {
               game.setState(State.IN_PLAY);
               List<User> players = game.getPlayers();
               players.add(user);
-              game.setCurrentPlayer(players.getFirst());
-              // TODO: 3/20/25 Need to figure out how to create turn and roll dice first time.
-              Turn turn = new Turn();
+              game.setCurrentPlayer(startNewTurn(game, null)); // TODO: 3/24/2025 evalute whether necessary
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
@@ -47,20 +49,43 @@ public class GameService implements AbstractGameService {
         );
   }
 
+
+
   @Override
   public void freezeOrContinue(RollAction action, UUID key, User user) {
-      return gameRepository
-          .findByPlayersContainsAndStateIn(user, EnumSet.of(State.IN_PLAY))
-          .map((game) -> {
-            Turn currentTurn = game.getCurrentTurn();
-            Roll currentRoll = currentTurn.getRolls().getFirst();
-            if (!currentTurn.getUser().equals(user)) {
-              throw new IllegalStateException();
+    gameRepository
+        .findByPlayersContainsAndStateIn(user, EnumSet.of(State.IN_PLAY))
+        .map((game) -> {
+          Turn currentTurn = game.getCurrentTurn();
+          Roll currentRoll = currentTurn.getRolls().getFirst();
+          if (!currentTurn.getUser().equals(user)) {
+            throw new IllegalStateException();
+          }
+          List<Die> dice = new LinkedList<>(currentRoll.getDice());
+          for(int[] group : action.getFrozenGroups()) {
+            // TODO: 3/24/2025 check int array to make sure group is valid for scoring and get score of that group
+            int score = 0; // FIXME: 3/24/2025 use the score returned bu the scoring table
+            VALUE_LOOP:
+            for(int value : group) {
+              for (Iterator<Die> iterator = dice.iterator(); iterator.hasNext(); ) {
+                if (iterator.next().getValue() == value) {
+                  iterator.remove();
+                  continue VALUE_LOOP;
+                }
+              }
+              throw new IllegalArgumentException();
             }
-            List<Die> dice = new LinkedList<>(currentRoll.getDice());
-            //create different list that has all dice rolled, then remove items from the list, as user passes them in, in the action
-            // watch out for "remove" when taking out dice from list
-          });
+          }
+          if (dice.isEmpty() || action.isFinished()) { // FIXME: 3/24/2025 add conditions to verify allowed to end turn
+            User nextPlayer = startNewTurn(game, user);
+            game.setCurrentPlayer(nextPlayer); // TODO: 3/24/2025 evaluate whether we really need this
+          } else {
+            addRoll(currentTurn, dice.size());
+          }
+          return gameRepository.save(game);
+        })
+
+        .orElseThrow();
 
     // TOD 3/21/25 Query game object with key and User
     // TOD 3/21/25 Look at most recent turn and most recent roll in game object
@@ -91,6 +116,37 @@ public class GameService implements AbstractGameService {
   public Game getCurrentPlayer() {
     return null;
   }
+
+  private User startNewTurn(Game game, User currentPlayer) {
+    Turn turn = new Turn();
+    User nextPlayer;
+    List<User> players = game.getPlayers();
+    if(currentPlayer == null) {
+      nextPlayer = players.getFirst();
+    } else {
+      int position = players.indexOf(currentPlayer);
+      nextPlayer = players.get((position + 1) % players.size());
+    }
+    turn.setUser(nextPlayer);
+    turn.setGame(game);
+    game.getTurns().add(turn);
+    addRoll(turn, 6);
+    return nextPlayer;
+  }
+
+  private void addRoll(Turn turn, int numberOfDice) {
+    Roll roll = new Roll();
+    roll.setTurn(turn);
+    roll.setNumberDice(numberOfDice);
+    turn.getRolls().add(roll);
+    for (int i = 0; i < roll.getNumberDice(); i++) {
+      Die die = new Die();
+      die.setGroup(0);
+      die.setValue(rng.nextInt(1, 7));
+      roll.getDice().add(die);
+    }
+  }
+}
 
 //  private Game setCurrentPlayer() { return CurrentPlayer }
 //  cycle through players via turn order,

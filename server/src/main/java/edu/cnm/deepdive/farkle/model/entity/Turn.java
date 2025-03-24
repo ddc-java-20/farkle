@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -55,7 +56,7 @@ public class Turn {
   @JsonProperty(access = Access.READ_ONLY)
   private boolean finished;
 
-  @OneToMany(mappedBy = "turn", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "turn", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("timestamp desc")
   private final List<Roll> rolls = new LinkedList<>();
 

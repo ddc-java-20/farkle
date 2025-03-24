@@ -77,9 +77,9 @@ public class User {
   @Override
   public boolean equals(Object obj) {
     boolean result;
-    if(this == obj) {
+    if (this == obj) {
       result = true;
-    } else if(obj instanceof User other) {
+    } else if (obj instanceof User other) {
       result = other.id == this.id;
     } else {
       result = false;

@@ -123,21 +123,21 @@ public class Roll {
     }
 
     @Override
-    public int hashCode() {
-      return Integer.hashCode(value);
-    }
-
-    @Override
     public boolean equals(Object obj) {
       boolean result;
       if(this == obj) {
         result = true;
-      } else if(obj instanceof Die other) {
+      } else if (obj instanceof Die other) {
         result = other.value == this.value;
       } else {
         result = false;
       }
       return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+      return Integer.hashCode(value);
     }
   }
 
