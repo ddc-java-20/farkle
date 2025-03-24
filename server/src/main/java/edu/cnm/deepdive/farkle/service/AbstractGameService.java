@@ -10,7 +10,7 @@ public interface AbstractGameService {
 
   Game startOrJoin(User user);
 
-  Game getGame(User user);
+  Game getGame(User user, UUID key);
 
   Game getGameState(User user);
 
