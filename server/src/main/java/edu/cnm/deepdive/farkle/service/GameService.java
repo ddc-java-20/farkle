@@ -71,7 +71,7 @@ public class GameService implements AbstractGameService {
         //To validate the dice selected, I used the list that Aaron started and called it "actionDice" below,
         // to work with the dice the player picked during their turn. It's a copy of getDice from Roll entity.
         //This keeps the original roll data untouched for scoring and other parts of the game.
-              List<Die> actionDice = new LinkedList<>(currentRoll.getDice()); //LinkedList removes the values
+              List<Die> actionDcie = new LinkedList<>(currentRoll.getDice()); //LinkedList removes the values
         // from actionDice that player chose to freeze
         //the remaining dice in actionDice reflect the dice that have not been frozen
               action.getFrozenGroups() //this is a method from RollAction DTO providing array of int arrays
