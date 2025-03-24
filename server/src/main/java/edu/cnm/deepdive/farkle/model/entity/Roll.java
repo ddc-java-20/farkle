@@ -121,6 +121,24 @@ public class Roll {
     public void setGroup(int group) {
       this.group = group;
     }
+
+    @Override
+    public int hashCode() {
+      return Integer.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      boolean result;
+      if(this == obj) {
+        result = true;
+      } else if(obj instanceof Die other) {
+        result = other.value == this.value;
+      } else {
+        result = false;
+      }
+      return super.equals(obj);
+    }
   }
 
 }

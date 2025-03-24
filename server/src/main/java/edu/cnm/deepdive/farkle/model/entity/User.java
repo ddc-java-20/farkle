@@ -69,6 +69,24 @@ public class User {
     return games;
   }
 
+  @Override
+  public int hashCode() {
+    return Long.hashCode(id);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result;
+    if(this == obj) {
+      result = true;
+    } else if(obj instanceof User other) {
+      result = other.id == this.id;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+
   @PrePersist
   void generateFieldValues() {
     externalKey = UUID.randomUUID();
