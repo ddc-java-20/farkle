@@ -69,6 +69,11 @@ public class User {
     return games;
   }
 
+  @PrePersist
+  void generateFieldValues() {
+    externalKey = UUID.randomUUID();
+  }
+
   @Override
   public int hashCode() {
     return Long.hashCode(id);
@@ -86,10 +91,4 @@ public class User {
     }
     return result;
   }
-
-  @PrePersist
-  void generateFieldValues() {
-    externalKey = UUID.randomUUID();
-  }
-
 }

@@ -11,4 +11,5 @@ public class Beans {
   public RandomGenerator provideRandomGenerator() {
     return RandomGenerator.getDefault();
   }
+
 }

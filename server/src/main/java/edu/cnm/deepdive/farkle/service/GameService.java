@@ -12,6 +12,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.random.RandomGenerator;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,42 @@ public class GameService implements AbstractGameService {
 
   private final GameRepository gameRepository;
   private final RandomGenerator rng;
+  private final Map<List<Integer>, Integer>
+      farkleScores = Map.ofEntries(
+      Map.entry(List.of(1), 100),
+      Map.entry(List.of(5), 50),
+      Map.entry(List.of(1,1,1), 1000),
+      Map.entry(List.of(2,2,2), 200),
+      Map.entry(List.of(3,3,3), 300),
+      Map.entry(List.of(4,4,4), 400),
+      Map.entry(List.of(5,5,5), 500),
+      Map.entry(List.of(6,6,6), 600),
+      Map.entry(List.of(1,1,1,1), 1000),
+      Map.entry(List.of(2,2,2,2), 1000),
+      Map.entry(List.of(3,3,3,3), 1000),
+      Map.entry(List.of(4,4,4,4), 1000),
+      Map.entry(List.of(5,5,5,5), 1000),
+      Map.entry(List.of(6,6,6,6), 1000),
+      Map.entry(List.of(1,1,1,1,1), 2000),
+      Map.entry(List.of(2,2,2,2,2), 2000),
+      Map.entry(List.of(3,3,3,3,3), 2000),
+      Map.entry(List.of(4,4,4,4,4), 2000),
+      Map.entry(List.of(5,5,5,5,5), 2000),
+      Map.entry(List.of(6,6,6,6,6), 2000),
+      Map.entry(List.of(1,1,1,1,1,1), 3000),
+      Map.entry(List.of(2,2,2,2,2,2), 3000),
+      Map.entry(List.of(3,3,3,3,3,3), 3000),
+      Map.entry(List.of(4,4,4,4,4,4), 3000),
+      Map.entry(List.of(5,5,5,5,5,5), 3000),
+      Map.entry(List.of(6,6,6,6,6,6), 3000),
+      Map.entry(List.of(1,2,3,4,5,6), 1500),
+      Map.entry(List.of(1,1), 0),
+      Map.entry(List.of(2,2), 0),
+      Map.entry(List.of(3,3), 0),
+      Map.entry(List.of(4,4), 0),
+      Map.entry(List.of(5,5), 0),
+      Map.entry(List.of(6,6), 0)
+      );
 
   public GameService(GameRepository gameRepository, RandomGenerator rng) {
     this.gameRepository = gameRepository;
@@ -37,7 +74,7 @@ public class GameService implements AbstractGameService {
               game.setState(State.IN_PLAY);
               List<User> players = game.getPlayers();
               players.add(user);
-              game.setCurrentPlayer(startNewTurn(game, null)); // TODO: 3/24/2025 evalute whether necessary
+              game.setCurrentPlayer(startNewTurn(game, null)); // TODO: 3/24/2025 evaluate whether necessary
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
