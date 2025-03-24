@@ -8,6 +8,7 @@ import edu.cnm.deepdive.farkle.model.entity.Roll.Die;
 import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.Turn;
 import edu.cnm.deepdive.farkle.model.entity.User;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.random.RandomGenerator;
+import java.util.stream.IntStream;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,41 +25,40 @@ public class GameService implements AbstractGameService {
   private final GameRepository gameRepository;
   private final RandomGenerator rng;
   private final Map<List<Integer>, Integer>
-      farkleScores = Map.ofEntries(
+      FARKLE_SCORES = Map.ofEntries(
       Map.entry(List.of(1), 100),
       Map.entry(List.of(5), 50),
-      Map.entry(List.of(1,1,1), 1000),
-      Map.entry(List.of(2,2,2), 200),
-      Map.entry(List.of(3,3,3), 300),
-      Map.entry(List.of(4,4,4), 400),
-      Map.entry(List.of(5,5,5), 500),
-      Map.entry(List.of(6,6,6), 600),
-      Map.entry(List.of(1,1,1,1), 1000),
-      Map.entry(List.of(2,2,2,2), 1000),
-      Map.entry(List.of(3,3,3,3), 1000),
-      Map.entry(List.of(4,4,4,4), 1000),
-      Map.entry(List.of(5,5,5,5), 1000),
-      Map.entry(List.of(6,6,6,6), 1000),
-      Map.entry(List.of(1,1,1,1,1), 2000),
-      Map.entry(List.of(2,2,2,2,2), 2000),
-      Map.entry(List.of(3,3,3,3,3), 2000),
-      Map.entry(List.of(4,4,4,4,4), 2000),
-      Map.entry(List.of(5,5,5,5,5), 2000),
-      Map.entry(List.of(6,6,6,6,6), 2000),
-      Map.entry(List.of(1,1,1,1,1,1), 3000),
-      Map.entry(List.of(2,2,2,2,2,2), 3000),
-      Map.entry(List.of(3,3,3,3,3,3), 3000),
-      Map.entry(List.of(4,4,4,4,4,4), 3000),
-      Map.entry(List.of(5,5,5,5,5,5), 3000),
-      Map.entry(List.of(6,6,6,6,6,6), 3000),
-      Map.entry(List.of(1,2,3,4,5,6), 1500),
-      Map.entry(List.of(1,1), 0),
-      Map.entry(List.of(2,2), 0),
-      Map.entry(List.of(3,3), 0),
-      Map.entry(List.of(4,4), 0),
-      Map.entry(List.of(5,5), 0),
-      Map.entry(List.of(6,6), 0)
-      );
+      Map.entry(List.of(1, 1, 1), 1000),
+      Map.entry(List.of(2, 2, 2), 200),
+      Map.entry(List.of(3, 3, 3), 300),
+      Map.entry(List.of(4, 4, 4), 400),
+      Map.entry(List.of(5, 5, 5), 500),
+      Map.entry(List.of(6, 6, 6), 600),
+      Map.entry(List.of(1, 1, 1, 1), 1000),
+      Map.entry(List.of(2, 2, 2, 2), 1000),
+      Map.entry(List.of(3, 3, 3, 3), 1000),
+      Map.entry(List.of(4, 4, 4, 4), 1000),
+      Map.entry(List.of(5, 5, 5, 5), 1000),
+      Map.entry(List.of(6, 6, 6, 6), 1000),
+      Map.entry(List.of(1, 1, 1, 1, 1), 2000),
+      Map.entry(List.of(2, 2, 2, 2, 2), 2000),
+      Map.entry(List.of(3, 3, 3, 3, 3), 2000),
+      Map.entry(List.of(4, 4, 4, 4, 4), 2000),
+      Map.entry(List.of(5, 5, 5, 5, 5), 2000),
+      Map.entry(List.of(6, 6, 6, 6, 6), 2000),
+      Map.entry(List.of(1, 1, 1, 1, 1, 1), 3000),
+      Map.entry(List.of(2, 2, 2, 2, 2, 2), 3000),
+      Map.entry(List.of(3, 3, 3, 3, 3, 3), 3000),
+      Map.entry(List.of(4, 4, 4, 4, 4, 4), 3000),
+      Map.entry(List.of(5, 5, 5, 5, 5, 5), 3000),
+      Map.entry(List.of(6, 6, 6, 6, 6, 6), 3000),
+      Map.entry(List.of(1, 2, 3, 4, 5, 6), 1500),
+      Map.entry(List.of(1, 1, 2, 2, 3, 3), 1500),
+      // TODO: 3/24/25 Finish scoring list for combos
+      Map.entry(List.of(2, 2, 3, 3, 4, 4), 1500),
+      Map.entry(List.of(3, 3, 4, 4, 5, 5), 1500),
+      Map.entry(List.of(4, 4, 5, 5, 6, 6), 1500)
+  );
 
   public GameService(GameRepository gameRepository, RandomGenerator rng) {
     this.gameRepository = gameRepository;
@@ -74,7 +75,7 @@ public class GameService implements AbstractGameService {
               game.setState(State.IN_PLAY);
               List<User> players = game.getPlayers();
               players.add(user);
-              game.setCurrentPlayer(startNewTurn(game, null)); // TODO: 3/24/2025 evaluate whether necessary
+              startNewTurn(game, null);
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
@@ -87,25 +88,33 @@ public class GameService implements AbstractGameService {
   }
 
 
-
   @Override
-  public void freezeOrContinue(RollAction action, UUID key, User user) {
-    gameRepository
+  public Roll freezeOrContinue(RollAction action, UUID key, User user) {
+    return gameRepository
         .findByPlayersContainsAndStateIn(user, EnumSet.of(State.IN_PLAY))
         .map((game) -> {
           Turn currentTurn = game.getCurrentTurn();
-          Roll currentRoll = currentTurn.getRolls().getFirst();
+          Roll currentRoll = currentTurn.getRolls().getLast();
           if (!currentTurn.getUser().equals(user)) {
             throw new IllegalStateException();
           }
           List<Die> dice = new LinkedList<>(currentRoll.getDice());
-          for(int[] group : action.getFrozenGroups()) {
-            // TODO: 3/24/2025 check int array to make sure group is valid for scoring and get score of that group
-            int score = 0; // FIXME: 3/24/2025 use the score returned bu the scoring table
+          int groupNumber = 0;
+          for (int[] group : action.getFrozenGroups()) {
+            groupNumber++;
+            int score = FARKLE_SCORES
+                .getOrDefault(Arrays.stream(group).sorted().boxed().toList(), 0);
+            if (score == 0) {
+              throw new IllegalArgumentException();
+            } else {
+              currentRoll.setRollScore(currentRoll.getRollScore() + score);
+            }
             VALUE_LOOP:
-            for(int value : group) {
+            for (int value : group) {
               for (Iterator<Die> iterator = dice.iterator(); iterator.hasNext(); ) {
-                if (iterator.next().getValue() == value) {
+                Die die = iterator.next();
+                if (die.getValue() == value) {
+                  die.setGroup(groupNumber);
                   iterator.remove();
                   continue VALUE_LOOP;
                 }
@@ -113,13 +122,21 @@ public class GameService implements AbstractGameService {
               throw new IllegalArgumentException();
             }
           }
-          if (dice.isEmpty() || action.isFinished()) { // FIXME: 3/24/2025 add conditions to verify allowed to end turn
-            User nextPlayer = startNewTurn(game, user);
-            game.setCurrentPlayer(nextPlayer); // TODO: 3/24/2025 evaluate whether we really need this
-          } else {
-            addRoll(currentTurn, dice.size());
+          if (currentRoll.getRollScore() == 0) {
+            currentRoll.setFarkle(true);
           }
-          return gameRepository.save(game);
+          Roll nextRoll;
+          if (currentRoll.isFarkle()
+              || dice.isEmpty()
+              || action.isFinished()) { // FIXME: 3/24/2025 add conditions to verify allowed to end turn
+            startNewTurn(game, user);
+            nextRoll = game.getCurrentTurn().getCurrentRoll();
+          } else {
+            nextRoll = addRoll(currentTurn, dice.size());
+          }
+          gameRepository
+              .save(game);
+          return nextRoll;
         })
 
         .orElseThrow();
@@ -135,8 +152,9 @@ public class GameService implements AbstractGameService {
   }
 
   @Override
-  public Game getGame(User user, UUID key) {
-    return null;
+  public Game getGame(UUID gameKey, User user) {
+    return gameRepository.findByPlayersContainsAndStateIn(user, EnumSet.allOf(State.class))
+        .orElseThrow();
   }
 
   @Override
@@ -158,7 +176,7 @@ public class GameService implements AbstractGameService {
     Turn turn = new Turn();
     User nextPlayer;
     List<User> players = game.getPlayers();
-    if(currentPlayer == null) {
+    if (currentPlayer == null) {
       nextPlayer = players.getFirst();
     } else {
       int position = players.indexOf(currentPlayer);
@@ -171,17 +189,23 @@ public class GameService implements AbstractGameService {
     return nextPlayer;
   }
 
-  private void addRoll(Turn turn, int numberOfDice) {
+  private Roll addRoll(Turn turn, int numberOfDice) {
     Roll roll = new Roll();
     roll.setTurn(turn);
     roll.setNumberDice(numberOfDice);
     turn.getRolls().add(roll);
-    for (int i = 0; i < roll.getNumberDice(); i++) {
-      Die die = new Die();
-      die.setGroup(0);
-      die.setValue(rng.nextInt(1, 7));
-      roll.getDice().add(die);
-    }
+    List<Die> dice = IntStream.generate(() -> rng.nextInt(1, 7))
+        .limit(numberOfDice)
+        .sorted()
+        .mapToObj((value) -> {
+          Die die = new Die();
+          die.setValue(value);
+          return die;
+        })
+        .toList();
+    roll.getDice().addAll(dice);
+    // TODO: 3/24/25 Check if the dice just rolled is a farkle
+    return roll;
   }
 }
 

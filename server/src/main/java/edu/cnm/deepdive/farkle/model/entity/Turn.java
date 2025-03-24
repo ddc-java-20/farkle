@@ -38,10 +38,6 @@ public class Turn {
 
   @Column(nullable = false)
   @JsonProperty(access = Access.READ_ONLY)
-  private int turnScore;
-
-  @Column(nullable = false)
-  @JsonProperty(access = Access.READ_ONLY)
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   private Instant startTime;
@@ -57,7 +53,8 @@ public class Turn {
   private boolean finished;
 
   @OneToMany(mappedBy = "turn", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("timestamp desc")
+  @OrderBy("timestamp ASC")
+  @JsonIgnore
   private final List<Roll> rolls = new LinkedList<>();
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -75,14 +72,6 @@ public class Turn {
 
   public boolean isFarkle(){
     return rolls.stream().anyMatch(Roll::isFarkle);
-  }
-
-  public int getTurnScore() {
-    return turnScore;
-  }
-
-  public void setTurnScore(int turnScore) {
-    this.turnScore = turnScore;
   }
 
   public boolean isFinished() {
@@ -116,6 +105,18 @@ public class Turn {
   public void setGame(Game game) {
     this.game = game;
   }
+
+  public Roll getCurrentRoll() {
+    return rolls.isEmpty() ? null : rolls.getLast();
+  }
+
+  public int getTurnScore() {
+    return rolls
+        .stream()
+        .mapToInt(Roll::getRollScore)
+        .sum();
+  }
+
 
   @PrePersist
   void generateFieldValues() {

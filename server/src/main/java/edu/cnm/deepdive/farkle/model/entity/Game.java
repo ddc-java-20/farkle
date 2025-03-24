@@ -40,16 +40,6 @@ public class Game {
   private UUID externalKey;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = true)
-  @JoinColumn(name = "current_player_id")
-  @JsonProperty(access = Access.READ_ONLY)
-  private User currentPlayer;
-
-  @ManyToOne(fetch = FetchType.EAGER, optional = true)
-  @JoinColumn(name = "turn_id", nullable = true)
-  @JsonProperty(access = Access.READ_ONLY)
-  private Turn currentTurn;
-
-  @ManyToOne(fetch = FetchType.EAGER, optional = true)
   @JoinColumn(name = "winner_id", nullable = true, insertable = false, updatable = false)
   @JsonProperty(access = Access.READ_ONLY)
   private User winner;
@@ -60,6 +50,7 @@ public class Game {
   private State state;
 
   @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy("startTime ASC")
   @JsonIgnore
   private final List<Turn> turns = new LinkedList<>();
 
@@ -79,22 +70,6 @@ public class Game {
 
   public UUID getExternalKey() {
     return externalKey;
-  }
-
-  public User getCurrentPlayer() {
-    return currentPlayer;
-  }
-
-  public void setCurrentPlayer(User currentPlayer) {
-    this.currentPlayer = currentPlayer;
-  }
-
-  public Turn getCurrentTurn() {
-    return currentTurn;
-  }
-
-  public void setCurrentTurn(Turn currentTurn) {
-    this.currentTurn = currentTurn;
   }
 
   public User getWinner() {
@@ -119,6 +94,10 @@ public class Game {
 
   public List<User> getPlayers() {
     return players;
+  }
+
+  public Turn getCurrentTurn(){
+    return turns.isEmpty() ? null : turns.getLast();
   }
 
   @PrePersist

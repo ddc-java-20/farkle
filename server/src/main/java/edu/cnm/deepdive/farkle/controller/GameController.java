@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.controller;
 
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.entity.Game;
+import edu.cnm.deepdive.farkle.model.entity.Roll;
 import edu.cnm.deepdive.farkle.service.AbstractGameService;
 import edu.cnm.deepdive.farkle.service.AbstractUserService;
 import java.util.UUID;
@@ -36,9 +37,13 @@ public class GameController {
   }
 
   @PostMapping(path = "/{key}/actions", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void freezeOrContinue(@RequestBody RollAction action, @PathVariable UUID key) {
-    gameService.freezeOrContinue(action, key, userService.getCurrent());
+  public Roll freezeOrContinue(@RequestBody RollAction action, @PathVariable UUID key) {
+    return gameService.freezeOrContinue(action, key, userService.getCurrent());
+  }
+
+  @GetMapping(path = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Game get(@PathVariable UUID key) {
+    return gameService.getGame(key, userService.getCurrent());
   }
 
   @GetMapping(path = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)

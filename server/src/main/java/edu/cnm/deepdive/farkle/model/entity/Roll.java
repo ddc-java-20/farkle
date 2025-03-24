@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.farkle.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import jakarta.persistence.AttributeOverride;
@@ -27,7 +28,7 @@ public class Roll {
   @Id
   @GeneratedValue
   @Column(name = "roll_id")
-  private long Id;
+  private long id;
 
   @Column(nullable = true)
   private int rollScore;
@@ -40,6 +41,7 @@ public class Roll {
 
   @JoinColumn(name = "turn_id", nullable = false, updatable = false)
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JsonIgnore
   private Turn turn;
 
   @Column(nullable = false)
@@ -51,19 +53,22 @@ public class Roll {
   @ElementCollection
   @CollectionTable(name = "roll_die", joinColumns = @JoinColumn(name = "roll_id"))
   @AttributeOverrides(
-      @AttributeOverride(name = "value", column = @Column(name = "face_value", nullable = false, updatable = false))
+      {
+          @AttributeOverride(name = "value", column = @Column(name = "face_value", nullable = false, updatable = false)),
+          @AttributeOverride(name = "group", column = @Column(name = "scoring_group", nullable = false, updatable = false))
+      }
   )
   private final List<Die> dice = new LinkedList<>();
 
-  public Long getId() {
-    return Id;
+  public long getId() {
+    return id;
   }
 
-  public Integer getRollScore() {
+  public int getRollScore() {
     return rollScore;
   }
 
-  public void setRollScore(Integer rollScore) {
+  public void setRollScore(int rollScore) {
     this.rollScore = rollScore;
   }
 
@@ -125,7 +130,7 @@ public class Roll {
     @Override
     public boolean equals(Object obj) {
       boolean result;
-      if(this == obj) {
+      if (this == obj) {
         result = true;
       } else if (obj instanceof Die other) {
         result = other.value == this.value;
