@@ -45,6 +45,8 @@ public class GameService implements AbstractGameService {
               players.add(user);
               game.setCurrentPlayer(players.getFirst());
               // TODO: 3/20/25 Need to figure out how to create turn and roll dice first time.
+              Turn turn = new Turn();
+              turn.setGame(game);
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
