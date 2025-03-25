@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
+@JsonPropertyOrder({"key", "startTime"})
 public class Turn {
 
   @Id
@@ -70,7 +72,7 @@ public class Turn {
     return externalKey;
   }
 
-  public boolean isFarkle(){
+  public boolean isFarkle() {
     return rolls.stream().anyMatch(Roll::isFarkle);
   }
 
@@ -111,10 +113,12 @@ public class Turn {
   }
 
   public int getTurnScore() {
-    return rolls
-        .stream()
-        .mapToInt(Roll::getRollScore)
-        .sum();
+    return isFarkle()
+        ? 0
+        : rolls
+            .stream()
+            .mapToInt(Roll::getRollScore)
+            .sum();
   }
 
 
