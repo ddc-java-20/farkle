@@ -6,6 +6,7 @@ import edu.cnm.deepdive.farkle.model.entity.Roll;
 import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.User;
 import java.util.UUID;
+import org.springframework.web.context.request.async.DeferredResult;
 
 public interface AbstractGameService {
 
@@ -13,11 +14,8 @@ public interface AbstractGameService {
 
   Game getGame(UUID gameKey, User user);
 
-  Game getGameState(User user);
-
-  Game setGameState(State state);
-
-  Game getCurrentPlayer();
+  DeferredResult<Game> getGame(UUID gameKey, User user, State state, int rollCount)
+      throws Throwable;
 
   Roll freezeOrContinue(RollAction action, UUID key, User user);
 

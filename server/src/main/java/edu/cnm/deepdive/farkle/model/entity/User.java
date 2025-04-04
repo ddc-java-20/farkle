@@ -2,12 +2,16 @@ package edu.cnm.deepdive.farkle.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.util.LinkedList;
@@ -17,6 +21,7 @@ import java.util.UUID;
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "user_profile")
+@JsonPropertyOrder({"key", "displayName"})
 public class User {
 
   @Id
@@ -36,9 +41,10 @@ public class User {
   @Column(nullable = true)
   private String displayName;
 
-  @ManyToMany(mappedBy = "players", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy("timestamp asc")
   @JsonIgnore
-  private final List<Game> games = new LinkedList<>();
+  private final List<GamePlayer> games = new LinkedList<>();
 
   public long getId() {
     return id;
@@ -65,7 +71,7 @@ public class User {
     this.displayName = gameName;
   }
 
-  public List<Game> getGames() {
+  public List<GamePlayer> getGames() {
     return games;
   }
 

@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
+@JsonPropertyOrder({"key", "startTime", "finished", "user", "rolls"})
 public class Turn {
 
   @Id

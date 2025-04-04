@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"key", "state", "winner", "players", "currentTurn", "rollCount"})
 public class Game {
 
   @Id
@@ -49,20 +51,14 @@ public class Game {
   @JsonProperty(access = Access.READ_ONLY)
   private State state;
 
-  @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("startTime ASC")
   @JsonIgnore
   private final List<Turn> turns = new LinkedList<>();
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {})
-  @JoinTable(name = "game_player",
-      joinColumns = @JoinColumn(name = "game_id"),
-      inverseJoinColumns = @JoinColumn(name = "player_id"),
-      uniqueConstraints = @UniqueConstraint(columnNames = {"game_id", "player_id"})
-  )
-  @OrderBy("externalKey")
-  @JsonProperty(access = Access.READ_ONLY)
-  private final List<User> players = new LinkedList<>();
+  @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
+  @OrderBy("timestamp asc")
+  private final List<GamePlayer> players = new LinkedList<>();
 
   public long getId() {
     return id;
@@ -92,13 +88,21 @@ public class Game {
     return turns;
   }
 
-  public List<User> getPlayers() {
+  public List<GamePlayer> getPlayers() {
     return players;
   }
 
   public Turn getCurrentTurn(){
     return turns.isEmpty() ? null : turns.getLast();
   }
+
+  public int getRollCount() {
+    return getTurns()
+        .stream()
+        .mapToInt((turn) -> turn.getRolls().size())
+        .sum();
+  }
+
 
   @PrePersist
   void generateFieldValues() {
