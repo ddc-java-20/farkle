@@ -15,10 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.farkle.R;
 import edu.cnm.deepdive.farkle.databinding.FragmentHomeBinding;
 import edu.cnm.deepdive.farkle.viewmodel.LoginViewModel;
 
+@AndroidEntryPoint
 public class HomeFragment extends Fragment implements MenuProvider {
 
   private static final String TAG = HomeFragment.class.getSimpleName();
@@ -38,6 +40,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
     super.onViewCreated(view, savedInstanceState);
     viewModel = new ViewModelProvider(requireActivity())
         .get(LoginViewModel.class);
+
     viewModel
         .getAccount()
         .observe(getViewLifecycleOwner(), (account) -> {
@@ -48,6 +51,13 @@ public class HomeFragment extends Fragment implements MenuProvider {
                 .navigate(HomeFragmentDirections.navigateToPreLoginFragment());
           }
         });
+
+    binding.startGameButton.setOnClickListener(v -> {
+      Log.d(TAG, "Start Game button clicked");
+      Navigation.findNavController(binding.getRoot()
+      ).navigate(HomeFragmentDirections.navigateToGameFragment());
+    });
+
     requireActivity().addMenuProvider(this, getViewLifecycleOwner(), State.RESUMED);
   }
 
