@@ -5,38 +5,38 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Embeddable
-class GamePlayerKey implements Serializable {
+public class GamePlayerKey implements Serializable {
 
   @Column(name = "game_id")
-  Long gameId;
+  private long gameId;
 
   @Column(name = "user_profile_id")
-  Long userProfileId;
+  private long userProfileId;
 
-  public Long getGameId() {
+  public long getGameId() {
     return gameId;
   }
 
-  public Long getUserProfileId() {
+  public long getUserProfileId() {
     return userProfileId;
   }
 
-  public void setGameId(Long gameId) {
+  public void setGameId(long gameId) {
     this.gameId = gameId;
   }
 
-  public void setUserProfileId(Long userProfileId) {
+  public void setUserProfileId(long userProfileId) {
     this.userProfileId = userProfileId;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-    GamePlayerKey that = (GamePlayerKey) obj;
-    return Objects.equals(gameId, that.gameId) &&
-        Objects.equals(userProfileId, that.userProfileId);
+    if (!(obj instanceof GamePlayerKey that)) return false;
+    return (gameId == that.gameId) &&
+        (userProfileId == that.userProfileId);
   }
 
   @Override

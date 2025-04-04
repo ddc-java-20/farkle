@@ -3,27 +3,45 @@ package edu.cnm.deepdive.farkle.service;
 import edu.cnm.deepdive.farkle.model.dao.GameRepository;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.entity.Game;
+import edu.cnm.deepdive.farkle.model.entity.GamePlayer;
+import edu.cnm.deepdive.farkle.model.entity.GamePlayerKey;
 import edu.cnm.deepdive.farkle.model.entity.Roll;
 import edu.cnm.deepdive.farkle.model.entity.Roll.Die;
 import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.Turn;
 import edu.cnm.deepdive.farkle.model.entity.User;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @Service
 public class GameService implements AbstractGameService {
 
+  private static final long POLLING_TIMEOUT_MS = 20_000L;
+  private static final int POLLING_POOL_SIZE = 4;
+  private static final long POLLING_INTERVAL_MS = 2000L;
+  private static final PageRequest TOP_ONE = PageRequest.of(0, 1);
+
   private final GameRepository gameRepository;
   private final RandomGenerator rng;
+  private final ScheduledExecutorService scheduler;
   private final Map<List<Integer>, Integer>
       FARKLE_SCORES = Map.ofEntries(
       Map.entry(List.of(1), 100),
@@ -73,11 +91,13 @@ public class GameService implements AbstractGameService {
       Map.entry(List.of(3, 3, 4, 4, 6, 6), 1500),
       Map.entry(List.of(3, 3, 5, 5, 6, 6), 1500),
       Map.entry(List.of(4, 4, 5, 5, 6, 6), 1500)
+      // TODO: 4/2/25 Confirm that this table is complete.
   );
 
   public GameService(GameRepository gameRepository, RandomGenerator rng) {
     this.gameRepository = gameRepository;
     this.rng = rng;
+    scheduler = Executors.newScheduledThreadPool(POLLING_POOL_SIZE);
   }
 
   @Override
@@ -88,20 +108,26 @@ public class GameService implements AbstractGameService {
             .findByState(State.PRE_GAME)
             .map((game) -> {
               game.setState(State.IN_PLAY);
-              List<User> players = game.getPlayers();
-              players.add(user);
+              List<GamePlayer> players = game.getPlayers();
+              GamePlayer player = new GamePlayer();
+              player.setUser(user);
+              player.setGame(game);
+              players.add(player);
               startNewTurn(game, null);
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
               Game game = new Game();
               game.setState(State.PRE_GAME);
-              game.getPlayers().add(user);
+              List<GamePlayer> players = game.getPlayers();
+              GamePlayer player = new GamePlayer();
+              player.setUser(user);
+              player.setGame(game);
+              players.add(player);
               return gameRepository.save(game);
             })
         );
   }
-
 
   @Override
   public Roll freezeOrContinue(RollAction action, UUID key, User user) {
@@ -144,11 +170,13 @@ public class GameService implements AbstractGameService {
           if (currentRoll.isFarkle()
               || dice.isEmpty()
               || action.isFinished()) { // FIXME: 3/24/2025 add conditions to verify allowed to end turn
+            currentTurn.setFinished(true);
             startNewTurn(game, user);
             nextRoll = game.getCurrentTurn().getCurrentRoll();
           } else {
             nextRoll = addRoll(currentTurn, dice.size());
           }
+          // TODO: 4/4/25 Check for game end conditions
           gameRepository
               .save(game);
           return nextRoll;
@@ -168,34 +196,67 @@ public class GameService implements AbstractGameService {
 
   @Override
   public Game getGame(UUID gameKey, User user) {
-    return gameRepository.findByPlayersContainsAndStateIn(user, EnumSet.allOf(State.class))
+    return gameRepository
+        .findByExternalKeyAndPlayersUserContains(gameKey, user)
         .orElseThrow();
   }
 
   @Override
-  public Game getGameState(User user) {
-    return null;
+  public DeferredResult<Game> getGame(UUID gameKey, User user, State state, int rollCount)
+      throws Throwable {
+    DeferredResult<Game> result = new DeferredResult<>(POLLING_TIMEOUT_MS);
+    ScheduledFuture<?>[] futurePolling = new ScheduledFuture<?>[1];
+    result.onTimeout(() -> sendGameStatus(gameKey, user, result, futurePolling));
+    Runnable pollingTask = () ->
+        checkForStateChange(gameKey, user, state, rollCount, result, futurePolling);
+    futurePolling[0] = scheduler.scheduleWithFixedDelay(pollingTask, 0,
+        POLLING_INTERVAL_MS, TimeUnit.MILLISECONDS);
+/*
+    try {
+      futurePolling[0].get();
+    } catch (ExecutionException e) {
+      throw e.getCause();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+*/
+    return result;
   }
 
-  @Override
-  public Game setGameState(State state) {
-    return null;
+  private void checkForStateChange(UUID gameKey, User user, State state, int rollCount,
+      DeferredResult<Game> result, ScheduledFuture<?>[] futurePolling) {
+    List<Boolean> stateChanged = gameRepository
+        .checkForUpdates(gameKey, user.getId(), state.name(), rollCount, TOP_ONE);
+    if (stateChanged.isEmpty() || stateChanged.getFirst() == null) {
+      throw new NoSuchElementException();
+    } else if (stateChanged.getFirst()) {
+      sendGameStatus(gameKey, user, result, futurePolling);
+    }
   }
 
-  @Override
-  public Game getCurrentPlayer() {
-    return null;
+  private void sendGameStatus(UUID gameKey, User user, DeferredResult<Game> result,
+      ScheduledFuture<?>[] futurePolling) {
+    Game game = gameRepository
+        .findByExternalKeyAndPlayersUserContains(gameKey, user)
+        .orElseThrow();
+    result.setResult(game);
+    futurePolling[0].cancel(true);
   }
+
 
   private User startNewTurn(Game game, User currentPlayer) {
     Turn turn = new Turn();
     User nextPlayer;
-    List<User> players = game.getPlayers();
+    List<GamePlayer> players = game.getPlayers();
     if (currentPlayer == null) {
-      nextPlayer = players.getFirst();
+      nextPlayer = players.getFirst().getUser();
     } else {
-      int position = players.indexOf(currentPlayer);
-      nextPlayer = players.get((position + 1) % players.size());
+      int position = players
+          .stream()
+          .map(GamePlayer::getUser)
+          .toList()
+          .indexOf(currentPlayer);
+      nextPlayer = players.get((position + 1) % players.size()).getUser();
     }
     turn.setUser(nextPlayer);
     turn.setGame(game);
@@ -222,6 +283,7 @@ public class GameService implements AbstractGameService {
     // TODO: 3/24/25 Check if the dice just rolled is a farkle
     return roll;
   }
+
 }
 
 

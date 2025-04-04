@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CollectionTable;
@@ -23,20 +24,25 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
+@JsonPropertyOrder({"rollScore", "farkle", "rolledAt", "numberDice", "dice"})
 public class Roll {
 
   @Id
   @GeneratedValue
   @Column(name = "roll_id")
+  @JsonIgnore
   private long id;
 
   @Column(nullable = true)
+  @JsonProperty(access = Access.READ_ONLY)
   private int rollScore;
 
   @Column(nullable = false, updatable = true)
+  @JsonProperty(access = Access.READ_ONLY)
   private boolean farkle;
 
   @Column(nullable = false, updatable = false)
+  @JsonProperty(access = Access.READ_ONLY)
   private int numberDice;
 
   @JoinColumn(name = "turn_id", nullable = false, updatable = false)
@@ -48,9 +54,9 @@ public class Roll {
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @JsonProperty(access = Access.READ_ONLY)
-  private Instant timestamp;
+  private Instant rolledAt;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "roll_die", joinColumns = @JoinColumn(name = "roll_id"))
   @AttributeOverrides(
       {
@@ -58,6 +64,7 @@ public class Roll {
           @AttributeOverride(name = "group", column = @Column(name = "scoring_group", nullable = false, updatable = false))
       }
   )
+  @JsonProperty(access = Access.READ_ONLY)
   private final List<Die> dice = new LinkedList<>();
 
   public long getId() {
@@ -100,8 +107,8 @@ public class Roll {
     this.turn = turn;
   }
 
-  public Instant getTimestamp() {
-    return timestamp;
+  public Instant getRolledAt() {
+    return rolledAt;
   }
 
   @Embeddable
