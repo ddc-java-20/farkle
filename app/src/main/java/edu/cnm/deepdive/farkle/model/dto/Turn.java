@@ -5,64 +5,76 @@ import java.time.Instant;
 import java.util.UUID;
 
 public class Turn {
-  //add @expose to all
+
   @Expose(serialize = false)
   private UUID key;
 
   @Expose(serialize = false)
   private Instant startTime;
+
+  @Expose(serialize = false)
+  private User user_id;
+
+  @Expose(serialize = false)
   private boolean finished;
-  private User user;
+
+  //was this moved?
+  @Expose(serialize = false)
   private boolean farkle;
+
+  @Expose(serialize = false)
   private Roll currentRoll;
+
+  @Expose(serialize = false)
   private int turnScore;
 
+  public UUID getKey() {
+    return key;
+  }
+  public void setKey(UUID key) {
+    this.key = key;
+  }
+
+  public Instant getStartTime() {
+    return startTime;
+  }
+  public void setStartTime(Instant startTime) {
+    this.startTime = startTime;
+  }
+
+  public User getUser_id() {
+    return user_id;
+  }
+  public void setUser_id(User user_id) {
+    this.user_id = user_id;
+  }
+
+  public boolean isFinished() {
+    return finished;
+  }
+  public void setFinished(boolean finished) {
+    this.finished = finished;
+  }
+
+  public boolean isFarkle() {
+    return farkle;
+  }
+  public void setFarkle(boolean farkle) {
+    this.farkle = farkle;
+  }
+
+  public Roll getCurrentRoll() {
+    return currentRoll;
+  }
+  public void setCurrentRoll(Roll currentRoll) {
+    this.currentRoll = currentRoll;
+  }
+
+  public int getTurnScore() {
+    return turnScore;
+  }
+  public void setTurnScore(int turnScore) {
+    this.turnScore = turnScore;
+  }
+
 }
-
-
-/*
-  "currentTurn": {
-      "key": "aac4ec7d-77c0-4bad-8143-c396ec149779",
-      "startTime": "2025-04-03T21:57:12.066406Z",
-      "finished": false,
-      "user": {
-      "key": "6d5980df-c935-46b8-8e9f-6e3f50fa62e3",
-      "displayName": "Mine"
-      },
-      "farkle": false,
-      "currentRoll": {
-      "rollScore": 0,      ***** int
-      "farkle": false,      boolean
-      "numberDice": 6,        int
-      "dice": [         class- Die  -- value & group are ints
-      {
-      "value": 2,
-      "group": 0
-      },
-      {
-      "value": 3,
-      "group": 0
-      },
-      {
-      "value": 3,
-      "group": 0
-      },
-      {
-      "value": 5,
-      "group": 0
-      },
-      {
-      "value": 5,
-      "group": 0
-      },
-      {
-      "value": 6,
-      "group": 0
-      }
-      ],
-      "timestamp": "2025-04-03T21:57:12.067398Z"
-      },
-      "turnScore": 0
-      },
-      }
-      "rollCount": 1*/

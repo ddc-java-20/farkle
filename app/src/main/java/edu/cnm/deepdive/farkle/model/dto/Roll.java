@@ -2,11 +2,12 @@ package edu.cnm.deepdive.farkle.model.dto;
 
 import com.google.gson.annotations.Expose;
 import java.time.Instant;
+import java.util.List;
 
 public class Roll {
 
   @Expose(serialize = false)
-  private long roll_id;
+  private long id;
 
   @Expose(serialize = false)
   private int rollScore;
@@ -18,17 +19,17 @@ public class Roll {
   private int numberDice;
 
   @Expose(serialize = false)
-  private Turn turn;
-
-  @Expose(serialize = false)
   private Instant timestamp;
 
+  @Expose(serialize = false)
+  private List<Die> dice;
 
-  public long getRoll_id() {
-    return roll_id;
+
+  public long getId() {
+    return id;
   }
-  public void setRoll_id(long roll_id) {
-    this.roll_id = roll_id;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public int getRollScore() {
@@ -52,13 +53,6 @@ public class Roll {
     this.numberDice = numberDice;
   }
 
-  public Turn getTurn() {
-    return turn;
-  }
-  public void setTurn(Turn turn) {
-    this.turn = turn;
-  }
-
   public Instant getTimestamp() {
     return timestamp;
   }
@@ -66,4 +60,11 @@ public class Roll {
     this.timestamp = timestamp;
   }
 
+  public List<Die> getDice() {
+    return dice;
+  }
+
+  public void setDice(List<Die> dice) {
+    this.dice = dice;
+  }
 }
