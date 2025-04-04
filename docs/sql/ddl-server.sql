@@ -4,12 +4,10 @@ create sequence turn_seq start with 1 increment by 50;
 create sequence user_profile_seq start with 1 increment by 50;
 create table game
 (
-    current_player_id bigint,
-    game_id           bigint                                 not null,
-    turn_id           bigint,
-    winner_id         bigint,
-    external_key      uuid                                   not null unique,
-    state             enum ('FINISHED','IN_PLAY','PRE_GAME') not null,
+    game_id      bigint                                 not null,
+    winner_id    bigint,
+    external_key uuid                                   not null unique,
+    state        enum ('FINISHED','IN_PLAY','PRE_GAME') not null,
     primary key (game_id)
 );
 create table game_player
@@ -30,14 +28,13 @@ create table roll
 );
 create table roll_die
 (
-    face_value integer not null, group
-    integer,
-    roll_id    bigint  not null
+    face_value    integer not null,
+    scoring_group integer not null,
+    roll_id       bigint  not null
 );
 create table turn
 (
     finished     boolean                     not null,
-    turn_score   integer                     not null,
     game_id      bigint                      not null,
     start_time   timestamp(6) with time zone not null,
     turn_id      bigint                      not null,
@@ -53,10 +50,6 @@ create table user_profile
     display_name    varchar(255),
     primary key (user_profile_id)
 );
-alter table if exists game
-    add constraint FKeup4dd732pnlpjvhh9npcvrg foreign key (current_player_id) references user_profile;
-alter table if exists game
-    add constraint FKoaji90cp43q1p2v8u82lg76fg foreign key (turn_id) references turn;
 alter table if exists game
     add constraint FKn7s1942q5h1109lb8houdtbai foreign key (winner_id) references user_profile;
 alter table if exists game_player

@@ -1,11 +1,15 @@
 package edu.cnm.deepdive.farkle.model.dto;
 
+import com.google.gson.annotations.Expose;
 import java.time.Instant;
 import java.util.UUID;
 
 public class Turn {
   //add @expose to all
+  @Expose(serialize = false)
   private UUID key;
+
+  @Expose(serialize = false)
   private Instant startTime;
   private boolean finished;
   private User user;

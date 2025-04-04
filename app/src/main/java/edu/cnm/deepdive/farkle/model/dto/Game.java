@@ -10,30 +10,50 @@ public class Game {
   private UUID key;
 
   @Expose(serialize = false)
+  private User winner;
+
+  @Expose(serialize = false)
   private State state;
 
   @Expose(serialize = false)
   private List<GamePlayer> players;
 
   @Expose(serialize = false)
-  private User winner;
-
-  @Expose(serialize = false)
   private Turn currentTurn;
 
-  /*"key": "bbcc8f4e-b673-45d4-9b1a-5e9c9e9c3f7d",
-      "state": "PRE_GAME",
-      "players": [
-  {
-    "timestamp": "2025-04-03T21:58:45.422131Z",
-      "user": {
-    "key": "66fbab8e-f3d4-49a6-ba2a-974fb25e44bc",
-        "displayName": "Mine"
+  public UUID getKey() {
+    return key;
   }
+  public void setKey(UUID key) {
+    this.key = key;
   }
-  ],
-      "rollCount": 0*/
 
-  //main structure of the game object to be received from server
+  public User getWinner() {
+    return winner;
+  }
+  public void setWinner(User winner) {
+    this.winner = winner;
+  }
+
+  public State getState() {
+    return state;
+  }
+  public void setState(State state) {
+    this.state = state;
+  }
+
+  public List<GamePlayer> getPlayers() {
+    return players;
+  }
+  public void setPlayers(List<GamePlayer> players) {
+    this.players = players;
+  }
+
+  public Turn getCurrentTurn() {
+    return currentTurn;
+  }
+  public void setCurrentTurn(Turn currentTurn) {
+    this.currentTurn = currentTurn;
+  }
 
 }
