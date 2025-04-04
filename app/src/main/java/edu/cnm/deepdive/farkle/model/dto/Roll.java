@@ -7,30 +7,19 @@ import java.util.List;
 public class Roll {
 
   @Expose(serialize = false)
-  private long id;
-
-  @Expose(serialize = false)
   private int rollScore;
 
   @Expose(serialize = false)
   private boolean farkle;
 
   @Expose(serialize = false)
+  private Instant rolledAt;
+
+  @Expose(serialize = false)
   private int numberDice;
 
   @Expose(serialize = false)
-  private Instant timestamp;
-
-  @Expose(serialize = false)
   private List<Die> dice;
-
-
-  public long getId() {
-    return id;
-  }
-  public void setId(long id) {
-    this.id = id;
-  }
 
   public int getRollScore() {
     return rollScore;
@@ -46,6 +35,13 @@ public class Roll {
     this.farkle = farkle;
   }
 
+  public Instant getRolledAt() {
+    return rolledAt;
+  }
+  public void setRolledAt(Instant rolledAt) {
+    this.rolledAt = rolledAt;
+  }
+
   public int getNumberDice() {
     return numberDice;
   }
@@ -53,18 +49,11 @@ public class Roll {
     this.numberDice = numberDice;
   }
 
-  public Instant getTimestamp() {
-    return timestamp;
-  }
-  public void setTimestamp(Instant timestamp) {
-    this.timestamp = timestamp;
-  }
-
   public List<Die> getDice() {
     return dice;
   }
-
   public void setDice(List<Die> dice) {
     this.dice = dice;
   }
+  
 }

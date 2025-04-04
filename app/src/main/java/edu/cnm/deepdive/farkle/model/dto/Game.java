@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.farkle.model.dto;
 
 import com.google.gson.annotations.Expose;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,10 +11,19 @@ public class Game {
   private UUID key;
 
   @Expose(serialize = false)
-  private User winner;
+  private Instant createdAt;
+
+  @Expose(serialize = false)
+  private Instant startedAt;
 
   @Expose(serialize = false)
   private State state;
+
+  @Expose(serialize = false)
+  private int rollCount;
+
+  @Expose(serialize = false)
+  private User winner;
 
   @Expose(serialize = false)
   private List<GamePlayer> players;
@@ -28,11 +38,18 @@ public class Game {
     this.key = key;
   }
 
-  public User getWinner() {
-    return winner;
+  public Instant getCreatedAt() {
+    return createdAt;
   }
-  public void setWinner(User winner) {
-    this.winner = winner;
+  public void setCreatedAt(Instant createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Instant getStartedAt() {
+    return startedAt;
+  }
+  public void setStartedAt(Instant startedAt) {
+    this.startedAt = startedAt;
   }
 
   public State getState() {
@@ -40,6 +57,20 @@ public class Game {
   }
   public void setState(State state) {
     this.state = state;
+  }
+
+  public int getRollCount() {
+    return rollCount;
+  }
+  public void setRollCount(int rollCount) {
+    this.rollCount = rollCount;
+  }
+
+  public User getWinner() {
+    return winner;
+  }
+  public void setWinner(User winner) {
+    this.winner = winner;
   }
 
   public List<GamePlayer> getPlayers() {

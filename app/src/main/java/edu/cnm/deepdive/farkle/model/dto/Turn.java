@@ -2,6 +2,7 @@ package edu.cnm.deepdive.farkle.model.dto;
 
 import com.google.gson.annotations.Expose;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class Turn {
@@ -10,23 +11,22 @@ public class Turn {
   private UUID key;
 
   @Expose(serialize = false)
-  private Instant startTime;
-
-  @Expose(serialize = false)
-  private User user_id;
+  private Instant startedAt;
 
   @Expose(serialize = false)
   private boolean finished;
 
-  //was this moved?
   @Expose(serialize = false)
   private boolean farkle;
 
   @Expose(serialize = false)
-  private Roll currentRoll;
+  private User user;
 
   @Expose(serialize = false)
-  private int turnScore;
+  private int score;
+
+  @Expose(serialize = false)
+  private List<Roll> rolls;
 
   public UUID getKey() {
     return key;
@@ -35,18 +35,11 @@ public class Turn {
     this.key = key;
   }
 
-  public Instant getStartTime() {
-    return startTime;
+  public Instant getStartedAt() {
+    return startedAt;
   }
-  public void setStartTime(Instant startTime) {
-    this.startTime = startTime;
-  }
-
-  public User getUser_id() {
-    return user_id;
-  }
-  public void setUser_id(User user_id) {
-    this.user_id = user_id;
+  public void setStartedAt(Instant startedAt) {
+    this.startedAt = startedAt;
   }
 
   public boolean isFinished() {
@@ -63,18 +56,25 @@ public class Turn {
     this.farkle = farkle;
   }
 
-  public Roll getCurrentRoll() {
-    return currentRoll;
+  public User getUser() {
+    return user;
   }
-  public void setCurrentRoll(Roll currentRoll) {
-    this.currentRoll = currentRoll;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public int getTurnScore() {
-    return turnScore;
+  public int getScore() {
+    return score;
   }
-  public void setTurnScore(int turnScore) {
-    this.turnScore = turnScore;
+  public void setScore(int score) {
+    this.score = score;
+  }
+
+  public List<Roll> getRolls() {
+    return rolls;
+  }
+  public void setRolls(List<Roll> rolls) {
+    this.rolls = rolls;
   }
 
 }

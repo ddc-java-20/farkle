@@ -6,23 +6,44 @@ import java.time.Instant;
 public class GamePlayer {
 
   @Expose(serialize = false)
-  private Instant timestamp;
+  private Instant joinedAt;
 
   @Expose(serialize = false)
-  private User user;
+  private int score;
 
-  public User getUser() {
-    return user;
+  @Expose(serialize = false)
+  private Long userId;
+
+
+  @Expose(serialize = false)
+  private Long lastTurnId;
+
+  public Instant getJoinedAt() {
+    return joinedAt;
   }
-  public void setUser(User user) {
-    this.user = user;
+  public void setJoinedAt(Instant joinedAt) {
+    this.joinedAt = joinedAt;
   }
 
-  public Instant getTimestamp() {
-    return timestamp;
+  public int getScore() {
+    return score;
   }
-  public void setTimestamp(Instant timestamp) {
-    this.timestamp = timestamp;
+  public void setScore(int score) {
+    this.score = score;
+  }
+
+  public Long getUserId() {
+    return userId;
+  }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
+
+  public Long getLastTurnId() {
+    return lastTurnId;
+  }
+  public void setLastTurnId(Long lastTurnId) {
+    this.lastTurnId = lastTurnId;
   }
 
 }

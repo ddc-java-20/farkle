@@ -4,13 +4,13 @@ import com.google.gson.annotations.Expose;
 import java.util.UUID;
 
 public class User {
-//do I add @JsonProperty ?
+//Can be used to update profile
+
   @Expose(serialize = false)
   private UUID key;
 
-  @Expose
+  @Expose(serialize = false)
   private String displayName;
-//Can be used to update profile
 
 
   public UUID getKey() {
