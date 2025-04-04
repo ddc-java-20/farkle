@@ -11,6 +11,7 @@ import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.Turn;
 import edu.cnm.deepdive.farkle.model.entity.User;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -187,9 +188,9 @@ public class GameService implements AbstractGameService {
     // TOD 3/21/25 Query game object with key and User
     // TOD 3/21/25 Look at most recent turn and most recent roll in game object
     // TOD 3/21/25 Validate whether the user IS the current user in turn
-    // TODO: 3/21/25 Validate what the user wants to do is valid according to the most recent roll
-    // TODO: 3/21/25 Compute the score that results from this action
-    // TODO: 3/21/25 Update the turn and roll entity instances and write to the database
+    // TOD 3/21/25 Validate what the user wants to do is valid according to the most recent roll
+    // TOD 3/21/25 Compute the score that results from this action
+    // TOD 3/21/25 Update the turn and roll entity instances and write to the database
     // TODO: 3/21/25 Check if this turn puts the game in 'last round' state
     // TODO: 3/21/25 If turn, advance to the next turn and user
   }
@@ -280,10 +281,30 @@ public class GameService implements AbstractGameService {
         })
         .toList();
     roll.getDice().addAll(dice);
-    // TODO: 3/24/25 Check if the dice just rolled is a farkle
+
+    // Check if the dice just rolled is a farkle
+    boolean isScoring = hasScoringCombination(new LinkedList<>(), dice);
+    roll.setFarkle(!isScoring);
     return roll;
   }
 
+  public boolean hasScoringCombination(List<Die> selection, List<Die> candidates) {
+    boolean result;
+    List<Integer> diceValues = selection.stream()
+        .map(Die::getValue)
+        .toList();
+    if (FARKLE_SCORES.containsKey(diceValues)) {
+      result = true;
+    } else if(candidates.isEmpty()) {
+      result = false;
+    } else {
+      List<Die> inclusiveSelection = new LinkedList<>(selection);
+      inclusiveSelection.add(candidates.getFirst());
+      result = hasScoringCombination(selection, candidates.subList(1, candidates.size()))
+          || hasScoringCombination(inclusiveSelection, candidates.subList(1, candidates.size()));
+    }
+    return result;
+  }
 }
 
 
