@@ -42,7 +42,7 @@ public class User {
   private String displayName;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("timestamp asc")
+  @OrderBy("joinedAt ASC")
   @JsonIgnore
   private final List<GamePlayer> games = new LinkedList<>();
 

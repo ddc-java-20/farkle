@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.UniqueConstraint;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"key", "state", "winner", "players", "currentTurn", "rollCount"})
+@JsonPropertyOrder({"key", "createdAt", "state", "startedAt", "rollCount", "winner", "players", "currentTurn"})
 public class Game {
 
   @Id
@@ -42,7 +43,7 @@ public class Game {
   private UUID externalKey;
 
   @ManyToOne(fetch = FetchType.EAGER, optional = true)
-  @JoinColumn(name = "winner_id", nullable = true, insertable = false, updatable = false)
+  @JoinColumn(name = "winner_id", nullable = true, updatable = true)
   @JsonProperty(access = Access.READ_ONLY)
   private User winner;
 
@@ -52,12 +53,12 @@ public class Game {
   private State state;
 
   @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderBy("startTime ASC")
+  @OrderBy("startedAt ASC")
   @JsonIgnore
   private final List<Turn> turns = new LinkedList<>();
 
   @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
-  @OrderBy("timestamp asc")
+  @OrderBy("joinedAt ASC")
   private final List<GamePlayer> players = new LinkedList<>();
 
   public long getId() {
@@ -103,6 +104,13 @@ public class Game {
         .sum();
   }
 
+  public Instant getStartedAt() {
+    return turns.isEmpty() ? null : turns.getFirst().getStartedAt();
+  }
+
+  public Instant getCreatedAt() {
+    return players.getFirst().getJoinedAt();
+  }
 
   @PrePersist
   void generateFieldValues() {

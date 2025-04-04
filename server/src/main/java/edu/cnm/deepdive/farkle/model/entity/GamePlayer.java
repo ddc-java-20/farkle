@@ -6,14 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,7 +24,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table(
     uniqueConstraints = @UniqueConstraint(columnNames = {"game_id", "user_profile_id"})
 )
-@JsonPropertyOrder({"timestamp", "user"})
+@JsonPropertyOrder({"joinedAt", "score", "user", "lastTurn"})
 public class GamePlayer {
 
   @Id
@@ -39,24 +37,26 @@ public class GamePlayer {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   @JsonProperty(access = Access.READ_ONLY)
-  private Instant timestamp;
+  private Instant joinedAt;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
   @JoinColumn(name = "game_id", nullable = false, updatable = false)
   @JsonIgnore
   private Game game;
 
-  @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
   @JoinColumn(name = "user_profile_id", nullable = false, updatable = false)
   @JsonProperty(access = Access.READ_ONLY)
   private User user;
 
+  // TODO: 4/4/25 Add transient fields for lastRoll and Current score only completed turns
+  
   public long getId() {
     return id;
   }
 
-  public Instant getTimestamp() {
-    return timestamp;
+  public Instant getJoinedAt() {
+    return joinedAt;
   }
 
   public Game getGame() {
@@ -73,6 +73,25 @@ public class GamePlayer {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Turn getLastTurn(){
+    return game
+        .getTurns()
+        .stream()
+        .filter((turn) -> turn.getUser().equals(user))
+        .reduce((turn1, turn2) -> turn2)
+        .orElse(null);
+  }
+
+  public int getScore() {
+    return game
+        .getTurns()
+        .stream()
+        .filter((turn) -> turn.getUser().equals(user))
+        .filter(Turn::isFinished)
+        .mapToInt(Turn::getScore)
+        .sum();
   }
 
 }

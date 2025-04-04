@@ -24,7 +24,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@JsonPropertyOrder({"rollScore", "farkle", "numberDice", "dice", "timestamp"})
+@JsonPropertyOrder({"rollScore", "farkle", "rolledAt", "numberDice", "dice"})
 public class Roll {
 
   @Id
@@ -54,9 +54,9 @@ public class Roll {
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @JsonProperty(access = Access.READ_ONLY)
-  private Instant timestamp;
+  private Instant rolledAt;
 
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "roll_die", joinColumns = @JoinColumn(name = "roll_id"))
   @AttributeOverrides(
       {
@@ -107,8 +107,8 @@ public class Roll {
     this.turn = turn;
   }
 
-  public Instant getTimestamp() {
-    return timestamp;
+  public Instant getRolledAt() {
+    return rolledAt;
   }
 
   @Embeddable

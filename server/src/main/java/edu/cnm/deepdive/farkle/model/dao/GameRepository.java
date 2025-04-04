@@ -16,7 +16,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 //  List<Game> findByUser(User user);
 
   @Query("""
-      SELECT g 
+      SELECT g
       FROM Game AS g
       JOIN g.players AS p
       WHERE g.state IN :states AND p.user = :player
@@ -56,6 +56,4 @@ public interface GameRepository extends JpaRepository<Game, Long> {
       Pageable pageable);
 
   Optional<Game> findByState(State state);
-
-
 }
