@@ -48,16 +48,15 @@
 
     <action
       android:id="@+id/navigate_to_game_fragment"
-      app:destination="@id/game_fragment"
-      app:popUpTo="@id/nav_graph"/>
+      app:destination="@id/game_fragment"/>
 
   </fragment>
 
   <fragment
     android:id="@+id/game_fragment"
-    android:name="edu.cnm.deepdive.farkle.controller.LoginFragment"
-    android:label="@string/game_fragment_label"
-    tools:layout="@layout/fragment_login">
+    android:name="edu.cnm.deepdive.farkle.controller.GameFragment"
+    android:label="@string/quit_game_label"
+    tools:layout="@layout/fragment_game">
 
     <action
       android:id="@+id/navigate_to_home_fragment"

@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.farkle.viewmodel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,5 +19,6 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
 
   public LiveData<Boolean> getQuitGame() {
     return quitGame;
+
   }
 }
