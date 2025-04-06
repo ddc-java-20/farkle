@@ -245,6 +245,7 @@ public class GameService implements AbstractGameService {
   }
 
 
+  @SuppressWarnings("NewApi")
   private User startNewTurn(Game game, User currentPlayer) {
     Turn turn = new Turn();
     User nextPlayer;
@@ -271,7 +272,7 @@ public class GameService implements AbstractGameService {
     roll.setTurn(turn);
     roll.setNumberDice(numberOfDice);
     turn.getRolls().add(roll);
-    List<Die> dice = IntStream.generate(() -> rng.nextInt(1, 7))
+    @SuppressWarnings("NewApi") List<Die> dice = IntStream.generate(() -> rng.nextInt(1, 7))
         .limit(numberOfDice)
         .sorted()
         .mapToObj((value) -> {
@@ -288,9 +289,10 @@ public class GameService implements AbstractGameService {
     return roll;
   }
 
+  @SuppressWarnings("NewApi")
   public boolean hasScoringCombination(List<Die> selection, List<Die> candidates) {
     boolean result;
-    List<Integer> diceValues = selection.stream()
+    @SuppressWarnings("NewApi") List<Integer> diceValues = selection.stream()
         .map(Die::getValue)
         .toList();
     if (FARKLE_SCORES.containsKey(diceValues)) {
@@ -305,6 +307,11 @@ public class GameService implements AbstractGameService {
     }
     return result;
   }
+
+  public Roll submitRollChoice(UUID gameKey, UUID userId, RollAction rollAction) {
+    return AbstractGameService.freezeOrContinue(gameKey, userId, rollAction);
+  }
+
 }
 
 
