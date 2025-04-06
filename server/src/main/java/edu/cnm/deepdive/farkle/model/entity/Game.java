@@ -94,7 +94,7 @@ public class Game {
   }
 
   public Turn getCurrentTurn(){
-    return turns.isEmpty() ? null : turns.getLast();
+    return (turns.isEmpty() || state == State.FINISHED) ? null : turns.getLast();
   }
 
   public int getRollCount() {

@@ -1,6 +1,8 @@
 package edu.cnm.deepdive.farkle.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -25,8 +27,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-@JsonPropertyOrder({"key", "startedAt", "finished", "farkle", "score", "user", "rolls"})
-public class Turn {
+@JsonPropertyOrder({"key", "startedAt", "finished", "farkle", "score", "user", "lastRoll"})
+@JsonInclude(Include.NON_NULL)
+public class Turn implements AnonymousTurn {
 
   @Id
   @GeneratedValue
@@ -71,10 +74,12 @@ public class Turn {
     return externalKey;
   }
 
-  public boolean isFarkle(){
+  @Override
+  public boolean isFarkle() {
     return rolls.stream().anyMatch(Roll::isFarkle);
   }
 
+  @Override
   public boolean isFinished() {
     return finished;
   }
@@ -95,6 +100,7 @@ public class Turn {
     this.user = user;
   }
 
+  @Override
   public Instant getStartedAt() {
     return startedAt;
   }
@@ -107,15 +113,19 @@ public class Turn {
     this.game = game;
   }
 
-  public Roll getCurrentRoll() {
+  @Override
+  public Roll getLastRoll() {
     return rolls.isEmpty() ? null : rolls.getLast();
   }
 
+  @Override
   public int getScore() {
-    return rolls
-        .stream()
-        .mapToInt(Roll::getRollScore)
-        .sum();
+    return isFarkle()
+        ? 0
+        : rolls
+            .stream()
+            .mapToInt(Roll::getRollScore)
+            .sum();
   }
 
 
