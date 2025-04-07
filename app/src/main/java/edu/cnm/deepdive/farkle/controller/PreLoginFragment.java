@@ -14,8 +14,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.farkle.R;
 import edu.cnm.deepdive.farkle.viewmodel.LoginViewModel;
+import java.util.Timer;
+import java.util.TimerTask;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 @AndroidEntryPoint
 public class PreLoginFragment extends Fragment {
 
@@ -32,6 +36,17 @@ public class PreLoginFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        requireActivity().runOnUiThread(PreLoginFragment.this::checkLoginState);
+      }
+    }, 3500);
+  }
+
+  private void checkLoginState() {
     LoginViewModel viewModel = new ViewModelProvider(requireActivity())
         .get(LoginViewModel.class);
     LifecycleOwner owner = getViewLifecycleOwner();
