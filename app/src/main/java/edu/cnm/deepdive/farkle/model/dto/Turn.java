@@ -77,4 +77,9 @@ public class Turn {
     this.rolls = rolls;
   }
 
+  public Roll getCurrentRoll() {
+    return rolls.getLast();
+  }
+
+
 }

@@ -8,4 +8,15 @@
   <string name="opponent_display_name">Opponent</string>
   <string name="game_fragment_label">Play Game</string>
   <string name="quit_game_label">Quit Game</string>
+  <string name="end_turn_label">End Turn</string>
+  <string name="submit_choice_label">Submit choice</string>
+  <string name="dice_1_label">Dice 1</string>
+  <string name="dice_2_label">Dice 2</string>
+  <string name="dice_3_label">Dice 3</string>
+  <string name="dice_4_label">Dice 4</string>
+  <string name="dice_5_label">Dice 5</string>
+  <string name="dice_6_label">Dice 6</string>
+  <string name="opponent_score">Opponent score</string>
+  <string name="player_score">Player score</string>
+  <string name="select_group_label">Set Scoring Group</string>
 </resources>
