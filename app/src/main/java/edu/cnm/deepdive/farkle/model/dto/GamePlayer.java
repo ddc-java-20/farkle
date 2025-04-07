@@ -12,11 +12,11 @@ public class GamePlayer {
   private int score;
 
   @Expose(serialize = false)
-  private Long userId;
+  private User user;
 
 
   @Expose(serialize = false)
-  private Long lastTurnId;
+    private Turn lastTurn;
 
   public Instant getJoinedAt() {
     return joinedAt;
@@ -32,18 +32,18 @@ public class GamePlayer {
     this.score = score;
   }
 
-  public Long getUserId() {
-    return userId;
+  public User getUser() {
+    return user;
   }
-  public void setUserId(Long userId) {
-    this.userId = userId;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public Long getLastTurnId() {
-    return lastTurnId;
+  public Turn getLastTurn() {
+    return lastTurn;
   }
-  public void setLastTurnId(Long lastTurnId) {
-    this.lastTurnId = lastTurnId;
+  public void setLastTurn(Turn lastTurn) {
+    this.lastTurn = lastTurn;
   }
 
 }

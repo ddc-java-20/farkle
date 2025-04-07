@@ -14,7 +14,7 @@ I want to know who is playing in the current game
 
 ### GET /farkle/games
 
-I want all of the games I played, and how many I won.
+I want all the games I played, and how many I won.
 
 ### GET /farkle/games/current-user/{key}
 

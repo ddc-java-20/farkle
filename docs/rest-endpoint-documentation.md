@@ -24,7 +24,8 @@ HTTP Status Codes:
 401 Unauthorized: If the user is not authenticated.
 Perform Action (Freeze/Continue)
 Server-relative URL: /games/{key}/actions
-Purpose: This endpoint allows a player to perform an action in a game, such as freezing their score or continuing their turn.
+Purpose: This endpoint allows a player to perform an action in a game, such as freezing their score
+or continuing their turn.
 Access Control:
 Authentication is required.
 No specific roles are required.
@@ -33,9 +34,11 @@ Inputs:
 Path Variables:
 key (UUID): The unique identifier of the game.
 Payload (Request Body):
-A RollAction object in application/json format. The RollAction object encapsulates the action the user wants to perform.
+A RollAction object in application/json format. The RollAction object encapsulates the action the
+user wants to perform.
 Outputs:
-Payload (Response Body): Returns a Roll object in application/json format, representing the result of the action.
+Payload (Response Body): Returns a Roll object in application/json format, representing the result
+of the action.
 HTTP Status Codes:
 200 OK: Action performed successfully.
 400 Bad Request: If the RollAction is invalid or the game is in an invalid state.
@@ -112,8 +115,8 @@ HTTP Status Codes:
 Key Points
 
 We might want to add details about how authentication is handled.
-Error Handling: expand on this to document specific error responses API might return (e.g., custom 
+Error Handling: expand on this to document specific error responses API might return (e.g., custom
 error codes or messages).
-Media Type: application/json is the media type for request and response bodies, 
+Media Type: application/json is the media type for request and response bodies,
 which is standard for REST APIs.
 

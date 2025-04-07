@@ -7,7 +7,7 @@ import java.util.List;
 public class Roll {
 
   @Expose(serialize = false)
-  private int rollScore;
+  private int score;
 
   @Expose(serialize = false)
   private boolean farkle;
@@ -21,11 +21,11 @@ public class Roll {
   @Expose(serialize = false)
   private List<Die> dice;
 
-  public int getRollScore() {
-    return rollScore;
+  public int getScore() {
+    return score;
   }
-  public void setRollScore(int rollScore) {
-    this.rollScore = rollScore;
+  public void setScore(int score) {
+    this.score = score;
   }
 
   public boolean isFarkle() {

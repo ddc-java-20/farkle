@@ -26,7 +26,7 @@ public class Turn {
   private int score;
 
   @Expose(serialize = false)
-  private List<Roll> rolls;
+  private Roll lastRoll;
 
   public UUID getKey() {
     return key;
@@ -70,16 +70,11 @@ public class Turn {
     this.score = score;
   }
 
-  public List<Roll> getRolls() {
-    return rolls;
+  public Roll getLastRoll() {
+    return lastRoll;
   }
-  public void setRolls(List<Roll> rolls) {
-    this.rolls = rolls;
+  public void setLastRoll(Roll lastRoll) {
+    this.lastRoll = lastRoll;
   }
-
-  public Roll getCurrentRoll() {
-    return rolls.getLast();
-  }
-
 
 }
