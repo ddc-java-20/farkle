@@ -3,6 +3,7 @@ package edu.cnm.deepdive.farkle.service;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.dto.State;
+import edu.cnm.deepdive.farkle.model.dto.User;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -44,6 +45,15 @@ public class GameService {
         .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
         .flatMap((token) -> farkleApi.getGame(gameId, token));
   }
+
+  public Single<User> getUser() {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
+        .flatMap(farkleApi::getMe);
+  }
+
 
   public Single<Game> getGame(UUID gameId, State state, int rollCount) {
     return signInService

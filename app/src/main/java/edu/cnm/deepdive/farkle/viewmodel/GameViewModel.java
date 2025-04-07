@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
+import edu.cnm.deepdive.farkle.model.dto.User;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import java.util.UUID;
 import edu.cnm.deepdive.farkle.service.GameService;
@@ -21,6 +22,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   private static final String TAG = GameViewModel.class.getSimpleName();
 
   private final MutableLiveData<Game> game;
+  private final MutableLiveData<User> user;
   private final MutableLiveData<Throwable> throwable;
   private final GameService gameService;
   private final CompositeDisposable pending;
@@ -30,12 +32,17 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
   public GameViewModel(GameService gameService) {
     this.gameService = gameService;
     game = new MutableLiveData<>();
+    user = new MutableLiveData<>();
     throwable = new MutableLiveData<>();
     pending = new CompositeDisposable();
   }
 
   public LiveData<Game> getGame() {
     return game;
+  }
+
+  public LiveData<User> getUser() {
+    return user;
   }
 
   public LiveData<Throwable> getThrowable() {
@@ -75,6 +82,16 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
               this.game.postValue(g);
               fetchGame(g);
             },
+            this::postThrowable,
+            pending
+        );
+  }
+
+  private void fetchUser() {
+    throwable.postValue(null);
+    gameService.getUser()
+        .subscribe(
+            user::postValue,
             this::postThrowable,
             pending
         );
