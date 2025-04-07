@@ -95,7 +95,7 @@ public class Game {
 
   @SuppressWarnings("NewApi")
   public Turn getCurrentTurn(){
-    return  turns.getLast();
+    return  turns.isEmpty() ? null : turns.getLast();
   }
 
   public int getRollCount() {

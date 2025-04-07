@@ -1,6 +1,8 @@
 package edu.cnm.deepdive.farkle.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -26,6 +28,7 @@ import org.hibernate.annotations.CreationTimestamp;
     uniqueConstraints = @UniqueConstraint(columnNames = {"game_id", "user_profile_id"})
 )
 @JsonPropertyOrder({"joinedAt", "score", "user", "lastTurn"})
+@JsonInclude(Include.NON_NULL)
 public class GamePlayer {
 
   @Id
