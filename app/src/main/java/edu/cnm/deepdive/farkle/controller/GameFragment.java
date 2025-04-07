@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.farkle.controller;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
@@ -17,6 +19,7 @@ import edu.cnm.deepdive.farkle.databinding.FragmentGameBinding;
 import edu.cnm.deepdive.farkle.model.dto.Die;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.State;
+import edu.cnm.deepdive.farkle.model.dto.User;
 import edu.cnm.deepdive.farkle.viewmodel.GameViewModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,9 @@ public class GameFragment extends Fragment {
   private GameViewModel viewModel;
   private boolean finished = false;
   private List<int[]> frozenGroups = new ArrayList<>();
-  private ToggleButton[] diceButtons;
+  private ImageButton[] diceButtons;
+  private Game game;
+  private User user;
 
   @Override
   public View onCreateView(
@@ -39,7 +44,7 @@ public class GameFragment extends Fragment {
       Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
 
-    diceButtons = new ToggleButton[]{
+    diceButtons = new ImageButton[]{
         binding.dice1,
         binding.dice2,
         binding.dice3,
@@ -56,6 +61,8 @@ public class GameFragment extends Fragment {
 
     bindGoHomeButton();
 
+    bindClearButton();
+
     return binding.getRoot();
   }
 
@@ -69,24 +76,28 @@ public class GameFragment extends Fragment {
 
     viewModel.startOrJoin();
 
-    viewModel.getGame().observe(getViewLifecycleOwner(), this::updateUi);
+    LifecycleOwner owner = getViewLifecycleOwner();
+    viewModel.getGame().observe(owner, this::updateUi);
 
+    viewModel.getUser().observe(owner, (user) -> {
+      this.user = user;
+    });
 
   }
 
   private void bindSelectGroupButton() {
     binding.selectGroupButton.setOnClickListener((v) -> {
       List<Integer> selectedDice = new ArrayList<>();
-
+      List<Die> dice = game.getCurrentTurn().getLastRoll().getDice();
       for (int i = 0; i < diceButtons.length; i++) {
-        if (diceButtons[i].isChecked()) {
-          selectedDice.add(i + 1);
+        if (diceButtons[i].getTag() != null && (Boolean) diceButtons[i].getTag()) {
+          selectedDice.add(dice.get(i).getValue());
         }
       }
       int[] diceGroup = selectedDice.stream().mapToInt(Integer::intValue).toArray();
       frozenGroups.add(diceGroup);
-      for (ToggleButton button : diceButtons) {
-        button.setChecked(false); // Reset toggles.
+      for (ImageButton button : diceButtons) {
+        button.setTag(false); // Reset toggles.
       }
       Snackbar.make(binding.getRoot(),
           "Scoring group added. Select more dice or click Submit Choice.",
@@ -115,33 +126,59 @@ public class GameFragment extends Fragment {
     });
   }
 
-  private void updateUi(Game game) {
+  private void bindClearButton() {
+    binding.clearButton.setOnClickListener((v) -> {
+      frozenGroups.clear();
+    });
+  }
 
-    PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers(), game.getCurrentTurn());
+  private void updateUi(Game game) {
+    this.game = game;
+    PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers(),
+        game.getCurrentTurn());
     binding.players.setAdapter(adapter);
     switch (game.getState()) {
       case PRE_GAME:
-        for (ToggleButton button : diceButtons) {
+        for (ImageButton button : diceButtons) {
           button.setVisibility(View.INVISIBLE);
         }
         break;
       case IN_PLAY:
-        if (game.getCurrentTurn().getLastRoll() != null) {
+        if (game.getCurrentTurn().getLastRoll() != null && game.getCurrentTurn().getUser()
+            .equals(user)) {
           List<Die> dice = game.getCurrentTurn().getLastRoll().getDice();
 
           for (int i = 0; i < diceButtons.length; i++) {
             if (i < dice.size()) {
               Die die = dice.get(i);
 
-              diceButtons[i].setTextOn(String.valueOf(die.getValue()));
-              diceButtons[i].setTextOff(String.valueOf(die.getValue()));
-              diceButtons[i].setChecked(false);
+              ImageButton button = diceButtons[i];
+              button.setVisibility(View.VISIBLE);
+              button.setEnabled(true);
+              button.getDrawable().setLevel(die.getValue());
+              button.setOnClickListener((v) -> {
+                Boolean selected = (Boolean) button.getTag();
+                if (selected == null || !selected) {
+                  button.getDrawable().setAlpha(64);
+                  button.setTag(true);
+                } else {
+                  button.getDrawable().setAlpha(255);
+                  button.setTag(false);
+                }
 
-              diceButtons[i].setVisibility(View.VISIBLE);
+              });
+
+            } else {
+              diceButtons[i].setVisibility(View.INVISIBLE); // Hide button
+              diceButtons[i].setEnabled(false);
             }
           }
+        } else {
+          for (ImageButton button : diceButtons) {
+            button.setVisibility(View.INVISIBLE);
+          }
         }
-        ;
+        break;
       case FINISHED:
         break;
 
