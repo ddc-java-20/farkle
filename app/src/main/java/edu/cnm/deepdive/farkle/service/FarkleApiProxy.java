@@ -2,6 +2,7 @@ package edu.cnm.deepdive.farkle.service;
 
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
+import edu.cnm.deepdive.farkle.model.dto.User;
 import io.reactivex.rxjava3.core.Single;
 import java.util.UUID;
 import retrofit2.http.Body;
@@ -21,6 +22,10 @@ public interface FarkleApiProxy {
   Single<Game> getGame(@Path("gameId") UUID gameId,
       @Header("Authorization") String bearerToken
   );
+
+  @GET("users/me")
+  Single<User> getMe(@Header("Authorization") String bearerToken);
+
 
   @POST("games/{gameKey}/action")
   Single<Boolean> freezeOrContinue(
