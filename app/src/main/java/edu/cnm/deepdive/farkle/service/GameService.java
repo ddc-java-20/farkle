@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import edu.cnm.deepdive.farkle.BuildConfig;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
-import java.util.List;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -16,7 +15,7 @@ public class GameService {
 
   private static final String API_BASE_URL = BuildConfig.API_BASE_URL; // Base URL from app config.
   private static GameService instance;
-  private static FarkleApi farkleApi = null;
+  private static FarkleApiProxy farkleApi = null;
 
   private GameService() {
     Gson gson = new GsonBuilder()
@@ -28,7 +27,7 @@ public class GameService {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
 
-    farkleApi = retrofit.create(FarkleApi.class);
+    farkleApi = retrofit.create(FarkleApiProxy.class);
   }
 
   /**
