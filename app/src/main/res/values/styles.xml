@@ -41,5 +41,10 @@
     <item name="android:textSize">?attr/toolbarTitleSize</item>
   </style>
 
+  <style name="Player" parent="TextAppearance.Material3.HeadlineMedium"/>
+
+  <style name="Player.Score">
+    <item name="android:textAlignment">textEnd</item>
+  </style>
 
 </resources>
