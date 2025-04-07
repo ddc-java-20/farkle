@@ -93,8 +93,9 @@ public class Game {
     return players;
   }
 
+  @SuppressWarnings("NewApi")
   public Turn getCurrentTurn(){
-    return (turns.isEmpty() || state == State.FINISHED) ? null : turns.getLast();
+    return  turns.getLast();
   }
 
   public int getRollCount() {

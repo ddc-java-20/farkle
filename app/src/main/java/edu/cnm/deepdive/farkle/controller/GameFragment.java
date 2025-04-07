@@ -62,7 +62,7 @@ public class GameFragment extends Fragment {
     });
 
     binding.selectGroupButton.setOnClickListener((v) -> {
-      List<int[]> selectedDiceGroups = new ArrayList<>();
+      List<Integer> selectedDice = new ArrayList<>();
       ToggleButton[] diceButtons = {
           binding.dice1,
           binding.dice2,
@@ -74,14 +74,17 @@ public class GameFragment extends Fragment {
 
       for (int i = 0; i < diceButtons.length; i++) {
         if (diceButtons[i].isChecked()) {
-          selectedDiceGroups.add(new int[]{i + 1});
+          selectedDice.add(i + 1);
         }
       }
-      frozenGroups.add(selectedDiceGroups.toArray(new int[0]));
+      int[] diceGroup = selectedDice.stream().mapToInt(Integer::intValue).toArray();
+      frozenGroups.add(diceGroup);
       for (ToggleButton button : diceButtons) {
         button.setChecked(false); // Reset toggles.
       }
-      Snackbar.make(binding.getRoot(), "Scoring group added. Select more dice or click Submit Choice.", Snackbar.LENGTH_SHORT).show();
+      Snackbar.make(binding.getRoot(),
+          "Scoring group added. Select more dice or click Submit Choice.",
+          Snackbar.LENGTH_SHORT).show();
     });
 
     binding.submitChoiceButton.setOnClickListener((v) -> {
@@ -89,8 +92,9 @@ public class GameFragment extends Fragment {
       UUID userId = getUserId(); // Retrieve the current UserId
       int[][] frozenGroups = getFrozenGroups();
 
-      viewModel.submitRollChoice(gameKey, frozenGroups, finished, new User(userId));
-      // TODO: 4/6/2025 clear frozenGroups
+      viewModel.submitRollChoice(gameKey, userId, frozenGroups, finished);
+      frozenGroups = new int[0][0];
+
     });
 
     binding.quitButton.setOnClickListener(v -> {
@@ -106,7 +110,7 @@ public class GameFragment extends Fragment {
   }
 
   private void updateUi(Game game) {
-    List<Roll.Die> dice = game.getCurrentTurn().getCurrentRoll().getDice();
+    List<Die> dice = game.getCurrentTurn().getCurrentRoll().getDice();
     ToggleButton[] diceButtons = {
         binding.dice1,
         binding.dice2,
@@ -118,7 +122,7 @@ public class GameFragment extends Fragment {
 
     for (int i = 0; i < diceButtons.length; i++) {
       if (i < dice.size()) {
-        Roll.Die die = dice.get(i);
+        Die die = dice.get(i);
 
         diceButtons[i].setTextOn(String.valueOf(die.getValue()));
         diceButtons[i].setTextOff(String.valueOf(die.getValue()));
@@ -131,14 +135,6 @@ public class GameFragment extends Fragment {
 
   private int[][] getFrozenGroups() {
     return frozenGroups.toArray(new int[0][0]); // Convert to 2D array for API.
-  }
-
-  private List<Die> getSelectedDice() {
-    List<Die> selectedDice = new ArrayList<>();
-
-    // Iterate through dice views to find selected dice (pseudo-logic).
-    // Replace with logic to extract selected dice from UI components.
-    return selectedDice;
   }
 
   private UUID getGameKey() {
