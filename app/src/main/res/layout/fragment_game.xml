@@ -7,51 +7,29 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   tools:context=".controller.GameFragment">
 
-  <TextView
-    android:id="@+id/player_name"
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/horizontal_guideline"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/player_score"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:text="@string/player_display_name"/>
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.25"/>
 
-  <TextView
-    android:id="@+id/player_score"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/end_turn_button"
-    app:layout_constraintBottom_toTopOf="@id/player_name"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:text="@string/player_score"/>
-
-
-  <TextView
-    android:id="@+id/opponent_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+  <ListView
+    android:id="@+id/players"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:orientation="vertical"
     app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    android:text="@string/opponent_display_name"/>
-
-  <TextView
-    android:id="@+id/opponent_score"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/opponent_name"
-    app:layout_constraintBottom_toTopOf="@id/dice_1"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:text="@string/opponent_score"/>
+    tools:listitem="@layout/item_player"/>
 
   <ToggleButton
     android:id="@+id/dice_1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/opponent_name"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
     app:layout_constraintEnd_toStartOf="@id/dice_2"
     app:layout_constraintBottom_toTopOf="@id/dice_3"
     app:layout_constraintStart_toStartOf="parent"/>
@@ -60,7 +38,7 @@
     android:id="@+id/dice_2"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/opponent_name"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
     app:layout_constraintStart_toEndOf="@id/dice_1"
     app:layout_constraintBottom_toTopOf="@id/dice_4"
     app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +92,7 @@
     android:layout_height="wrap_content"
     app:layout_constraintTop_toBottomOf="@id/dice_5"
     app:layout_constraintEnd_toStartOf="@id/select_group_button"
-    app:layout_constraintBottom_toTopOf="@id/player_name"
+    app:layout_constraintBottom_toTopOf="@id/quit_button"
     app:layout_constraintStart_toStartOf="parent"
     android:textOff="@string/end_turn_label"
     android:text="@string/end_turn_label"/>
@@ -125,7 +103,7 @@
     android:layout_height="wrap_content"
     app:layout_constraintTop_toBottomOf="@id/dice_6"
     app:layout_constraintStart_toEndOf="@id/end_turn_button"
-    app:layout_constraintBottom_toTopOf="@id/player_name"
+    app:layout_constraintBottom_toTopOf="@id/quit_button"
     android:text="@string/select_group_label"/>
 
   <Button
@@ -135,7 +113,7 @@
     app:layout_constraintTop_toBottomOf="@id/dice_6"
     app:layout_constraintStart_toEndOf="@id/select_group_button"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/player_name"
+    app:layout_constraintBottom_toTopOf="@id/quit_button"
     android:text="@string/submit_choice_label"/>
 
   <Button
@@ -143,7 +121,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
     android:text="@string/quit_game_label"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
