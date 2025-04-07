@@ -10,16 +10,19 @@ import androidx.annotation.Nullable;
 import edu.cnm.deepdive.farkle.R;
 import edu.cnm.deepdive.farkle.databinding.ItemPlayerBinding;
 import edu.cnm.deepdive.farkle.model.dto.GamePlayer;
+import edu.cnm.deepdive.farkle.model.dto.Turn;
 import java.util.List;
 
 public class PlayerAdapter extends ArrayAdapter<GamePlayer> {
 
   private final LayoutInflater inflater;
+  private final Turn currentTurn;
 
   public PlayerAdapter(@NonNull Context context,
-      @NonNull List<GamePlayer> players) {
+      @NonNull List<GamePlayer> players, Turn currentTurn) {
     super(context, R.layout.item_player, players);
     inflater = LayoutInflater.from(context);
+    this.currentTurn = currentTurn;
   }
 
   @NonNull
@@ -30,6 +33,9 @@ public class PlayerAdapter extends ArrayAdapter<GamePlayer> {
         : ItemPlayerBinding.bind(convertView);
 
     GamePlayer player = getItem(position);
+    if (currentTurn != null && currentTurn.getUser().equals(player.getUser())) {
+      // TODO: 4/7/2025 highlight to show this is current user
+    }
     binding.displayName.setText(player.getUser().getDisplayName());
     binding.score.setText(String.valueOf(player.getScore()));
     return binding.getRoot();

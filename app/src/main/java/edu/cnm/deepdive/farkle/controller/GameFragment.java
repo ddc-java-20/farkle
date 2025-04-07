@@ -117,7 +117,7 @@ public class GameFragment extends Fragment {
 
   private void updateUi(Game game) {
 
-    PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers());
+    PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers(), game.getCurrentTurn());
     binding.players.setAdapter(adapter);
     switch (game.getState()) {
       case PRE_GAME:
