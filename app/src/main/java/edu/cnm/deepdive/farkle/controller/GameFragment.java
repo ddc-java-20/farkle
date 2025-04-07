@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.farkle.controller;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.preference.PreferenceManager;
 import com.google.android.material.snackbar.Snackbar;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.farkle.databinding.FragmentGameBinding;
@@ -30,10 +28,7 @@ public class GameFragment extends Fragment {
   private GameViewModel viewModel;
   private boolean finished = false;
   private List<int[]> frozenGroups = new ArrayList<>();
-
-  public GameFragment() {
-    // Required empty public constructor
-  }
+  private ToggleButton[] diceButtons;
 
   @Override
   public View onCreateView(
@@ -50,22 +45,27 @@ public class GameFragment extends Fragment {
 
     viewModel = new ViewModelProvider(this).get(GameViewModel.class);
 
+    getLifecycle().addObserver(viewModel);
+
+    viewModel.startOrJoin();
+
     viewModel.getGame().observe(getViewLifecycleOwner(), this::updateUi);
 
     binding.endTurnButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
       finished = isChecked; // Update e
     });
 
+    diceButtons = new ToggleButton[] {
+        binding.dice1,
+        binding.dice2,
+        binding.dice3,
+        binding.dice4,
+        binding.dice5,
+        binding.dice6
+    };
+
     binding.selectGroupButton.setOnClickListener((v) -> {
       List<Integer> selectedDice = new ArrayList<>();
-      ToggleButton[] diceButtons = {
-          binding.dice1,
-          binding.dice2,
-          binding.dice3,
-          binding.dice4,
-          binding.dice5,
-          binding.dice6
-      };
 
       for (int i = 0; i < diceButtons.length; i++) {
         if (diceButtons[i].isChecked()) {
@@ -83,13 +83,9 @@ public class GameFragment extends Fragment {
     });
 
     binding.submitChoiceButton.setOnClickListener((v) -> {
-      UUID gameKey = getGameKey(); // Retrieve the current game key.
-      UUID userId = getUserId(); // Retrieve the current UserId
       int[][] frozenGroups = getFrozenGroups();
 
-      viewModel.submitRollChoice(gameKey, userId, frozenGroups, finished);
-      frozenGroups = new int[0][0];
-
+      viewModel.submitRollChoice(frozenGroups, finished);
     });
 
     binding.quitButton.setOnClickListener(v -> {
@@ -98,22 +94,8 @@ public class GameFragment extends Fragment {
     });
   }
 
-  @Override
-  public void onDestroyView() {
-    binding = null;
-    super.onDestroyView();
-  }
-
   private void updateUi(Game game) {
     List<Die> dice = game.getCurrentTurn().getCurrentRoll().getDice();
-    ToggleButton[] diceButtons = {
-        binding.dice1,
-        binding.dice2,
-        binding.dice3,
-        binding.dice4,
-        binding.dice5,
-        binding.dice6
-    };
 
     for (int i = 0; i < diceButtons.length; i++) {
       if (i < dice.size()) {
@@ -128,19 +110,14 @@ public class GameFragment extends Fragment {
     }
   }
 
+  @Override
+  public void onDestroyView() {
+    binding = null;
+    super.onDestroyView();
+  }
+
   private int[][] getFrozenGroups() {
     return frozenGroups.toArray(new int[0][0]); // Convert to 2D array for API.
-  }
-
-  private UUID getGameKey() {
-    // Return the current game's external key (mock value for now).
-    return UUID.randomUUID();
-  }
-
-  private UUID getUserId() {
-    String userIdString = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        .getString("user_id_key", null);
-    return UUID.fromString(userIdString);
   }
 
 }

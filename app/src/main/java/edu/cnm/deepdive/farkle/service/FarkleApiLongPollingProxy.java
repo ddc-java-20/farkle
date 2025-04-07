@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Single;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -17,6 +18,9 @@ public interface FarkleApiLongPollingProxy {
    * @return Asynchronous call containing game data.
    */
   @GET("games/{gameId}")
-  Single<Game> getGame(@Path("gameId") UUID gameId, @Query("state") State state, @Query("rollCount") int rollCount );
+  Single<Game> getGame(@Path("gameId") UUID gameId,
+      @Query("state") State state,
+      @Query("rollCount") int rollCount,
+      @Header("Authorization") String bearerToken);
 
 }
