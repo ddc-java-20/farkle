@@ -40,7 +40,7 @@ public class GameController {
   }
 
   @PostMapping(path = "/{key}/actions", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public Roll freezeOrContinue(@RequestBody RollAction action, @PathVariable UUID key) {
+  public boolean freezeOrContinue(@RequestBody RollAction action, @PathVariable UUID key) {
     return gameService.freezeOrContinue(action, key, userService.getCurrent());
   }
 

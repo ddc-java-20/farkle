@@ -24,7 +24,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@JsonPropertyOrder({"rollScore", "farkle", "rolledAt", "numberDice", "dice"})
+@JsonPropertyOrder({"rolledAt", "farkle", "score", "numberDice", "dice"})
 public class Roll {
 
   @Id
@@ -34,7 +34,7 @@ public class Roll {
   private long id;
 
   @Column(nullable = true)
-  @JsonProperty(access = Access.READ_ONLY)
+  @JsonProperty(value = "score", access = Access.READ_ONLY)
   private int rollScore;
 
   @Column(nullable = false, updatable = true)

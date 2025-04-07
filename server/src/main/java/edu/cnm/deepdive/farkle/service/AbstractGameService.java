@@ -17,6 +17,6 @@ public interface AbstractGameService {
   DeferredResult<Game> getGame(UUID gameKey, User user, State state, int rollCount)
       throws Throwable;
 
-  Roll freezeOrContinue(RollAction action, UUID key, User user);
+  boolean freezeOrContinue(RollAction action, UUID key, User user);
 
 }

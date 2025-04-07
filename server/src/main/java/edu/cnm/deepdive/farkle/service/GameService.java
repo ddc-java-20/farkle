@@ -4,14 +4,11 @@ import edu.cnm.deepdive.farkle.model.dao.GameRepository;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.entity.Game;
 import edu.cnm.deepdive.farkle.model.entity.GamePlayer;
-import edu.cnm.deepdive.farkle.model.entity.GamePlayerKey;
 import edu.cnm.deepdive.farkle.model.entity.Roll;
 import edu.cnm.deepdive.farkle.model.entity.Roll.Die;
 import edu.cnm.deepdive.farkle.model.entity.State;
 import edu.cnm.deepdive.farkle.model.entity.Turn;
 import edu.cnm.deepdive.farkle.model.entity.User;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -19,9 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -39,12 +34,8 @@ public class GameService implements AbstractGameService {
   private static final int POLLING_POOL_SIZE = 4;
   private static final long POLLING_INTERVAL_MS = 2000L;
   private static final PageRequest TOP_ONE = PageRequest.of(0, 1);
-
-  private final GameRepository gameRepository;
-  private final RandomGenerator rng;
-  private final ScheduledExecutorService scheduler;
-  private final Map<List<Integer>, Integer>
-      FARKLE_SCORES = Map.ofEntries(
+  private static final int WINNING_THRESHOLD = 2000; // FIXME: 4/5/25 Revert to 10000, when ready
+  private static final Map<List<Integer>, Integer> FARKLE_SCORES = Map.ofEntries(
       Map.entry(List.of(1), 100),
       Map.entry(List.of(5), 50),
       Map.entry(List.of(1, 1, 1), 1000),
@@ -95,6 +86,10 @@ public class GameService implements AbstractGameService {
       // TODO: 4/2/25 Confirm that this table is complete.
   );
 
+  private final GameRepository gameRepository;
+  private final RandomGenerator rng;
+  private final ScheduledExecutorService scheduler;
+
   public GameService(GameRepository gameRepository, RandomGenerator rng) {
     this.gameRepository = gameRepository;
     this.rng = rng;
@@ -114,7 +109,12 @@ public class GameService implements AbstractGameService {
               player.setUser(user);
               player.setGame(game);
               players.add(player);
-              startNewTurn(game, null);
+              Roll nextRoll;
+              User currentUser = null;
+              do {
+                currentUser = startNewTurn(game, currentUser);
+                nextRoll = game.getCurrentTurn().getLastRoll();
+              } while (nextRoll.isFarkle());
               return gameRepository.save(game);
             })
             .orElseGet(() -> {
@@ -131,10 +131,14 @@ public class GameService implements AbstractGameService {
   }
 
   @Override
-  public Roll freezeOrContinue(RollAction action, UUID key, User user) {
+  public boolean freezeOrContinue(RollAction action, UUID key, User user) {
     return gameRepository
-        .findByPlayersContainsAndStateIn(user, EnumSet.of(State.IN_PLAY))
+        .findByExternalKeyAndPlayersUserContains(key, user)
         .map((game) -> {
+          boolean continueTurn = true;
+          if (game.getState() != State.IN_PLAY) {
+            throw new IllegalStateException();
+          }
           Turn currentTurn = game.getCurrentTurn();
           Roll currentRoll = currentTurn.getRolls().getLast();
           if (!currentTurn.getUser().equals(user)) {
@@ -167,20 +171,43 @@ public class GameService implements AbstractGameService {
           if (currentRoll.getRollScore() == 0) {
             currentRoll.setFarkle(true);
           }
-          Roll nextRoll;
+          Roll nextRoll = null;
           if (currentRoll.isFarkle()
               || dice.isEmpty()
               || action.isFinished()) { // FIXME: 3/24/2025 add conditions to verify allowed to end turn
             currentTurn.setFinished(true);
-            startNewTurn(game, user);
-            nextRoll = game.getCurrentTurn().getCurrentRoll();
+            continueTurn = false;
+            // TOD Check for score over winning threshold
+            if (!currentRoll.isFarkle()
+                && game
+                .getTurns()
+                .stream()
+                .filter((turn) -> turn.getUser().equals(user))
+                .mapToInt(Turn::getScore)
+                .sum() >= WINNING_THRESHOLD) {
+              game.setState(State.FINISHED);
+              game.setWinner(user);
+            }
+            if (game.getState() == State.IN_PLAY) {
+              startNewTurn(game, user);
+              nextRoll = game.getCurrentTurn().getLastRoll();
+            }
           } else {
             nextRoll = addRoll(currentTurn, dice.size());
+          }
+          if (game.getState() == State.IN_PLAY) {
+            //noinspection DataFlowIssue
+            while (nextRoll.isFarkle()) {
+              User currentUser = currentTurn.getUser();
+              startNewTurn(game, currentUser);
+              nextRoll = game.getCurrentTurn().getLastRoll();
+              continueTurn = false;
+            }
           }
           // TODO: 4/4/25 Check for game end conditions
           gameRepository
               .save(game);
-          return nextRoll;
+          return continueTurn;
         })
 
         .orElseThrow();
@@ -192,7 +219,7 @@ public class GameService implements AbstractGameService {
     // TOD 3/21/25 Compute the score that results from this action
     // TOD 3/21/25 Update the turn and roll entity instances and write to the database
     // TODO: 3/21/25 Check if this turn puts the game in 'last round' state
-    // TODO: 3/21/25 If turn, advance to the next turn and user
+    // TODO: 3/21/25 If turn over, advance to the next turn and user
   }
 
   @Override
@@ -245,25 +272,25 @@ public class GameService implements AbstractGameService {
   }
 
 
-  private User startNewTurn(Game game, User currentPlayer) {
+  private User startNewTurn(Game game, User currentUser) {
     Turn turn = new Turn();
-    User nextPlayer;
+    User nextUser;
     List<GamePlayer> players = game.getPlayers();
-    if (currentPlayer == null) {
-      nextPlayer = players.getFirst().getUser();
+    if (currentUser == null) {
+      nextUser = players.getFirst().getUser();
     } else {
       int position = players
           .stream()
           .map(GamePlayer::getUser)
           .toList()
-          .indexOf(currentPlayer);
-      nextPlayer = players.get((position + 1) % players.size()).getUser();
+          .indexOf(currentUser);
+      nextUser = players.get((position + 1) % players.size()).getUser();
     }
-    turn.setUser(nextPlayer);
+    turn.setUser(nextUser);
     turn.setGame(game);
     game.getTurns().add(turn);
     addRoll(turn, 6);
-    return nextPlayer;
+    return nextUser;
   }
 
   private Roll addRoll(Turn turn, int numberOfDice) {
@@ -283,8 +310,10 @@ public class GameService implements AbstractGameService {
     roll.getDice().addAll(dice);
 
     // Check if the dice just rolled is a farkle
-    boolean isScoring = hasScoringCombination(new LinkedList<>(), dice);
-    roll.setFarkle(!isScoring);
+    if (!hasScoringCombination(new LinkedList<>(), dice)) {
+      roll.setFarkle(true);
+      turn.setFinished(true);
+    }
     return roll;
   }
 
@@ -295,7 +324,7 @@ public class GameService implements AbstractGameService {
         .toList();
     if (FARKLE_SCORES.containsKey(diceValues)) {
       result = true;
-    } else if(candidates.isEmpty()) {
+    } else if (candidates.isEmpty()) {
       result = false;
     } else {
       List<Die> inclusiveSelection = new LinkedList<>(selection);
