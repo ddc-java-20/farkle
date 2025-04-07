@@ -95,7 +95,7 @@ public class GameFragment extends Fragment {
   }
 
   private void updateUi(Game game) {
-    List<Die> dice = game.getCurrentTurn().getCurrentRoll().getDice();
+    List<Die> dice = game.getCurrentTurn().getLastRoll().getDice();
 
     for (int i = 0; i < diceButtons.length; i++) {
       if (i < dice.size()) {
