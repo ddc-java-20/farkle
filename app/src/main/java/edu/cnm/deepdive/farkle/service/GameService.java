@@ -1,58 +1,64 @@
 package edu.cnm.deepdive.farkle.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
+import edu.cnm.deepdive.farkle.model.dto.State;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.UUID;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.Retrofit.Builder;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class GameService {
+  private static final String BEARER_TOKEN_FORMAT = "Bearer %s";
 
-  private static GameService BuildConfig;
-  private static final String API_BASE_URL = BuildConfig.API_BASE_URL; // Base URL from app config.
-  private static GameService instance;
-//  private static FarkleApi farkleApi = null;
+  private final GoogleSignInService signInService;
+  private final FarkleApiProxy farkleApi;
+  private final FarkleApiLongPollingProxy farkleApiLong;
+  private final Scheduler scheduler;
 
-  private GameService() {
-    Gson gson = new GsonBuilder()
-        .excludeFieldsWithoutExposeAnnotation() // Respect GSON Expose annotations.
-        .create();
-
-    Retrofit retrofit = new Builder()
-        .baseUrl(API_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build();
-
-//    farkleApi = retrofit.create(FarkleApi.class);
+  @Inject
+  GameService(GoogleSignInService signInService, FarkleApiProxy farkleApi,
+      FarkleApiLongPollingProxy farkleApiLong) {
+    this.signInService = signInService;
+    this.farkleApi = farkleApi;
+    this.farkleApiLong = farkleApiLong;
+    scheduler = Schedulers.io();
   }
 
-  /**
-   * Singleton instance of the service layer.
-   */
-  public static synchronized GameService getInstance() {
-    if (instance == null) {
-      instance = new GameService();
-    }
-    return instance;
+  public Single<Game> startOrJoin() {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
+        .flatMap(farkleApi::startOrJoin);
   }
 
-  /**
-   * Retrieves game data from the backend.
-   *
-//   * @param gameId Unique ID of the game.
-   * @return Call object for obtaining the game asynchronously.
-   */
-//  public Call<Game> getGame(UUID gameId) {
-//    return farkleApi.getGame(gameId);
-//  }
+  public Single<Game> getGame(UUID gameId) {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
+        .flatMap((token) -> farkleApi.getGame(gameId, token));
+  }
 
-  public static Call<Game> freezeOrContinue(UUID gameKey, UUID userId, RollAction rollAction) {
-//    return farkleApi.freezeOrContinue(gameKey, userId, rollAction);
-  return null;
+  public Single<Game> getGame(UUID gameId, State state, int rollCount) {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
+        .flatMap((token) -> farkleApiLong.getGame(gameId, state, rollCount, token));
+  }
+
+  public Single<Boolean> freezeOrContinue(UUID gameKey, RollAction rollAction) {
+    return signInService
+        .refreshBearerToken()
+        .observeOn(scheduler)
+        .map((token) -> String.format(BEARER_TOKEN_FORMAT, token))
+        .flatMap((token) -> farkleApi.freezeOrContinue(gameKey, rollAction, token));
   }
 
 }
