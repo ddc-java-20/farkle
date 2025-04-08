@@ -140,6 +140,7 @@ public class GameFragment extends Fragment {
     switch (game.getState()) {
       case PRE_GAME:
         for (ImageButton button : diceButtons) {
+          button.setEnabled(false);
           button.setImageDrawable(null);
         }
         break;
@@ -180,6 +181,10 @@ public class GameFragment extends Fragment {
         }
         break;
       case FINISHED:
+        for (ImageButton button : diceButtons) {
+          button.setEnabled(false);
+          button.setImageDrawable(null);
+        }
         break;
 
       default:
