@@ -168,7 +168,8 @@ public class GameFragment extends Fragment {
     switch (game.getState()) {
       case PRE_GAME:
         for (ImageButton button : diceButtons) {
-          button.setVisibility(View.INVISIBLE);
+          button.setEnabled(false);
+          button.setImageDrawable(null);
         }
         break;
       case IN_PLAY:
@@ -208,6 +209,10 @@ public class GameFragment extends Fragment {
         }
         break;
       case FINISHED:
+        for (ImageButton button : diceButtons) {
+          button.setEnabled(false);
+          button.setImageDrawable(null);
+        }
         break;
 
       default:
