@@ -25,6 +25,7 @@ public class PlayerAdapter extends ArrayAdapter<GamePlayer> {
     this.currentTurn = currentTurn;
   }
 
+
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -34,10 +35,15 @@ public class PlayerAdapter extends ArrayAdapter<GamePlayer> {
 
     GamePlayer player = getItem(position);
     if (currentTurn != null && currentTurn.getUser().equals(player.getUser())) {
-      // TODO: 4/7/2025 highlight to show this is current user
+
+      binding.getRoot().setBackgroundColor(getContext().getColor(R.color.active_player_highlight));
+    } else {
+      binding.getRoot().setBackgroundColor(getContext().getColor(R.color.default_background));
     }
     binding.displayName.setText(player.getUser().getDisplayName());
     binding.score.setText(String.valueOf(player.getScore()));
     return binding.getRoot();
   }
 }
+
+
