@@ -8,11 +8,18 @@
   tools:context=".controller.GameFragment">
 
   <androidx.constraintlayout.widget.Guideline
-    android:id="@+id/horizontal_guideline"
+    android:id="@+id/horizontal_guideline_top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent="0.25"/>
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/horizontal_guideline_bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.85"/>
 
   <ListView
     android:id="@+id/players"
@@ -20,89 +27,102 @@
     android:layout_height="0dp"
     android:orientation="vertical"
     app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/horizontal_guideline"
+    app:layout_constraintBottom_toTopOf="@id/horizontal_guideline_top"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     tools:listitem="@layout/item_player"/>
 
   <ImageButton
     android:id="@+id/dice_1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
+    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toStartOf="@id/dice_2"
-    app:layout_constraintBottom_toTopOf="@id/dice_3"
-    app:layout_constraintStart_toStartOf="parent"/>
+    app:layout_constraintDimensionRatio="1:1" />
 
   <ImageButton
     android:id="@+id/dice_2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
     app:layout_constraintStart_toEndOf="@id/dice_1"
-    app:layout_constraintBottom_toTopOf="@id/dice_4"
-    app:layout_constraintEnd_toEndOf="parent"
-    />
+    app:layout_constraintEnd_toStartOf="@id/dice_3"
+    app:layout_constraintDimensionRatio="1:1" />
 
   <ImageButton
     android:id="@+id/dice_3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/dice_1"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
+    app:layout_constraintStart_toEndOf="@id/dice_2"
     app:layout_constraintEnd_toStartOf="@id/dice_4"
-    app:layout_constraintBottom_toTopOf="@id/dice_5"
-    app:layout_constraintStart_toStartOf="parent"
-    />
+    app:layout_constraintDimensionRatio="1:1" />
 
   <ImageButton
     android:id="@+id/dice_4"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/dice_2"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
     app:layout_constraintStart_toEndOf="@id/dice_3"
-    app:layout_constraintBottom_toTopOf="@id/dice_6"
-    app:layout_constraintEnd_toEndOf="parent"
-    />
+    app:layout_constraintEnd_toStartOf="@id/dice_5"
+    app:layout_constraintDimensionRatio="1:1" />
 
   <ImageButton
     android:id="@+id/dice_5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/dice_3"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
+    app:layout_constraintStart_toEndOf="@id/dice_4"
     app:layout_constraintEnd_toStartOf="@id/dice_6"
-    app:layout_constraintBottom_toTopOf="@id/submit_choice_button"
-    app:layout_constraintStart_toStartOf="parent"
-
-    />
+    app:layout_constraintDimensionRatio="1:1" />
 
   <ImageButton
     android:id="@+id/dice_6"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:maxWidth="64dp"
+    android:maxHeight="64dp"
+    android:layout_margin="4dp"
     android:src="@drawable/dice_faces"
     android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/dice_4"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
     app:layout_constraintStart_toEndOf="@id/dice_5"
-    app:layout_constraintBottom_toTopOf="@id/submit_choice_button"
     app:layout_constraintEnd_toEndOf="parent"
-    />
+    app:layout_constraintDimensionRatio="1:1" />
+
 
 
   <Switch
     android:id="@+id/end_turn_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/dice_5"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintEnd_toStartOf="@id/select_group_button"
     app:layout_constraintBottom_toTopOf="@id/quit_button"
     app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +132,7 @@
     android:id="@+id/select_group_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/dice_6"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintStart_toEndOf="@id/end_turn_button"
     app:layout_constraintBottom_toTopOf="@id/quit_button"
     android:text="@string/select_group_label"/>
@@ -121,7 +141,7 @@
     android:id="@+id/submit_choice_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/dice_6"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintStart_toEndOf="@id/select_group_button"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toTopOf="@id/quit_button"

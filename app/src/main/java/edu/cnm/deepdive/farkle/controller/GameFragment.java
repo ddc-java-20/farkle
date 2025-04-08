@@ -121,7 +121,6 @@ public class GameFragment extends Fragment {
   private void bindSubmitChoice() {
     binding.submitChoiceButton.setOnClickListener((v) -> {
       int[][] frozenGroups = getFrozenGroups();
-
       viewModel.submitRollChoice(frozenGroups, finished);
     });
   }
