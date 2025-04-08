@@ -102,10 +102,12 @@
     android:id="@+id/end_turn_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/half_dynamic_spacing"
     app:layout_constraintTop_toBottomOf="@id/dice_5"
     app:layout_constraintEnd_toStartOf="@id/select_group_button"
     app:layout_constraintBottom_toTopOf="@id/quit_button"
     app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintHorizontal_chainStyle="spread"
     android:text="@string/end_turn_label"/>
 
   <Button
@@ -114,6 +116,7 @@
     android:layout_height="wrap_content"
     app:layout_constraintTop_toBottomOf="@id/dice_6"
     app:layout_constraintStart_toEndOf="@id/end_turn_button"
+    app:layout_constraintEnd_toStartOf="@id/submit_choice_button"
     app:layout_constraintBottom_toTopOf="@id/quit_button"
     android:text="@string/select_group_label"/>
 
@@ -132,12 +135,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/quit_button"
     app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintHorizontal_chainStyle="spread"
     android:text="@string/clear_scoring_groups_label"/>
   <Button
     android:id="@+id/quit_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:layout_constraintStart_toEndOf="@id/clear_button"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     android:text="@string/quit_game_label"/>
