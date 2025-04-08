@@ -25,6 +25,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+/**
+ * A fragment that facilitates the gameplay interface for the Farkle Game application.
+ *
+ * GameFragment is responsible for managing the UI and interaction logic during gameplay.
+ * It ties together game state and user inputs to update and process game behaviors
+ * via the GameViewModel. This fragment provides options for users to roll dice,
+ * select dice groups for scoring, submit choices, clear selections, or end their turn.
+ * Users can also navigate back to the home screen using the provided interface.
+ *
+ * This fragment observes data changes from the GameViewModel, such as the current
+ * game state and user information, to dynamically update its UI.
+ */
 @AndroidEntryPoint
 public class GameFragment extends Fragment {
 
@@ -70,7 +83,7 @@ public class GameFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    viewModel = new ViewModelProvider(this).get(GameViewModel.class);
+    viewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
 
     getLifecycle().addObserver(viewModel);
 
@@ -85,6 +98,21 @@ public class GameFragment extends Fragment {
 
   }
 
+
+  /**
+   * Binds the "Select Group" button to its corresponding functionality. This method sets up an
+   * {@code OnClickListener} for the button, allowing users to select a group of dice based on the
+   * toggled dice buttons. When the button is clicked, the selected dice values from the most recent
+   * roll are collected, and the selected group of dice is added to a list of frozen groups.
+   *
+   * The method performs the following operations:
+   * - Retrieves the dice values from the current roll.
+   * - Identifies dice that have been selected (toggled) by the user.
+   * - Converts the selected dice to an integer array and stores it in the frozen groups list.
+   * - Resets the toggle state of all dice buttons.
+   * - Displays a Snackbar message to confirm that the scoring group has been added and prompts
+   *   the user to either select more dice or submit their choice.
+   */
   private void bindSelectGroupButton() {
     binding.selectGroupButton.setOnClickListener((v) -> {
       List<Integer> selectedDice = new ArrayList<>();
