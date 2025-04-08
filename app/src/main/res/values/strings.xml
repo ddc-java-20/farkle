@@ -19,4 +19,6 @@
   <string name="opponent_score">Opponent score</string>
   <string name="player_score">Player score</string>
   <string name="select_group_label">Set Scoring Group</string>
+  <string name="clear_scoring_groups_label">Clear selected</string>
+  <string name="app_logo_description">Farkle app launcher</string>
 </resources>

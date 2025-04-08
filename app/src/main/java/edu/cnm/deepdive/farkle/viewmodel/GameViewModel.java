@@ -23,6 +23,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
 
   private final MutableLiveData<Game> game;
   private final MutableLiveData<User> user;
+  private final MutableLiveData<Boolean> continueTurn;
   private final MutableLiveData<Throwable> throwable;
   private final GameService gameService;
   private final CompositeDisposable pending;
@@ -33,8 +34,10 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     this.gameService = gameService;
     game = new MutableLiveData<>();
     user = new MutableLiveData<>();
+    continueTurn = new MutableLiveData<>();
     throwable = new MutableLiveData<>();
     pending = new CompositeDisposable();
+    fetchUser();
   }
 
   public LiveData<Game> getGame() {
@@ -43,6 +46,10 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
 
   public LiveData<User> getUser() {
     return user;
+  }
+
+  public MutableLiveData<Boolean> getContinueTurn() {
+    return continueTurn;
   }
 
   public LiveData<Throwable> getThrowable() {
@@ -68,7 +75,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
     //noinspection DataFlowIssue
     gameService.freezeOrContinue(game.getValue().getKey(), rollAction)
         .subscribe(
-            (continueTurn) -> {},
+            continueTurn::postValue,
             this::postThrowable,
             pending
         );

@@ -27,7 +27,7 @@ public interface FarkleApiProxy {
   Single<User> getMe(@Header("Authorization") String bearerToken);
 
 
-  @POST("games/{gameKey}/action")
+  @POST("games/{gameKey}/actions")
   Single<Boolean> freezeOrContinue(
       @Path("gameKey") UUID gameKey,       // Pass the gameKey as part of the URL.
       @Body RollAction action,              // Pass RollAction as the body of the request.
