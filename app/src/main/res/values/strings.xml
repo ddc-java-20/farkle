@@ -29,4 +29,14 @@
   <string name="android_core_display">ANDROID</string>
   <string name="database_layer">Database Layer</string>
   <string name="security_layer">Security Layer</string>
+  <string name="dependencies_diagram">Android App\nDevelopment</string>
+  <string name="programming_language_diagram">PROGRAMMING LANGUAGE</string>
+  <string name="java_icon_text">Java</string>
+  <string name="kotlin_icon_text">Kotlin</string>
+  <string name="tool_kit_diagram_category">TOOL KIT</string>
+  <string name="android_studio_dev_tools_diagram_text"><![CDATA[Android Studio & Development\nTools]]></string>
+  <string name="sdk_diagram_category">SDK</string>
+  <string name="android_sdk_icon_text">Android SDK</string>
+  <string name="android_studio_dev_tools_icon">android</string>
+  <string name="kotlin_logo">kotlin_logo</string>
 </resources>
