@@ -65,15 +65,6 @@ public class GameFragment extends Fragment {
       Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
 
-//    diceButtons = new ImageButton[]{
-//        binding.dice1,
-//        binding.dice2,
-//        binding.dice3,
-//        binding.dice4,
-//        binding.dice5,
-//        binding.dice6
-//    };
-
     bindEndTurnButton();
 
     bindSelectGroupButton();
