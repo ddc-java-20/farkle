@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal"
+  android:gravity="center_vertical"
+  android:layout_margin="8dp"
+  android:minHeight="48dp"
+  android:paddingStart="8dp"
+  android:paddingEnd="8dp">
+
+    <ImageView
+    android:id="@+id/die_1"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"/>
+
+    <ImageView
+    android:id="@+id/die_2"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"
+    />
+
+    <ImageView
+    android:id="@+id/die_3"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"
+    />
+
+    <ImageView
+    android:id="@+id/die_4"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"/>
+
+    <ImageView
+    android:id="@+id/die_5"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"/>
+
+    <ImageView
+    android:id="@+id/die_6"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="4dp"
+    android:src="@drawable/dice_faces"/>
+
+
+  </LinearLayout>

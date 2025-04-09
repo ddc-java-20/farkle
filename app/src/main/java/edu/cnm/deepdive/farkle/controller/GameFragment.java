@@ -14,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import dagger.hilt.android.AndroidEntryPoint;
+import edu.cnm.deepdive.farkle.R;
 import edu.cnm.deepdive.farkle.adapter.PlayerAdapter;
+import edu.cnm.deepdive.farkle.adapter.ScoringGroupAdapter;
 import edu.cnm.deepdive.farkle.databinding.FragmentGameBinding;
 import edu.cnm.deepdive.farkle.model.dto.Die;
 import edu.cnm.deepdive.farkle.model.dto.Game;
@@ -45,6 +47,7 @@ public class GameFragment extends Fragment {
   private FragmentGameBinding binding;
   private GameViewModel viewModel;
   private boolean finished = false;
+  private ScoringGroupAdapter scoringGroupAdapter;
   private List<int[]> frozenGroups = new ArrayList<>();
   private ImageButton[] diceButtons;
   private Game game;
@@ -57,14 +60,14 @@ public class GameFragment extends Fragment {
       Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
 
-    diceButtons = new ImageButton[]{
-        binding.dice1,
-        binding.dice2,
-        binding.dice3,
-        binding.dice4,
-        binding.dice5,
-        binding.dice6
-    };
+//    diceButtons = new ImageButton[]{
+//        binding.dice1,
+//        binding.dice2,
+//        binding.dice3,
+//        binding.dice4,
+//        binding.dice5,
+//        binding.dice6
+//    };
 
     bindEndTurnButton();
 
@@ -127,10 +130,15 @@ public class GameFragment extends Fragment {
       for (ImageButton button : diceButtons) {
         button.setTag(false); // Reset toggles.
       }
-      Snackbar.make(binding.getRoot(),
-          "Scoring group added. Select more dice or click Submit Choice.",
-          Snackbar.LENGTH_SHORT).show();
+      refreshGroupsDisplay();
     });
+  }
+
+  private void refreshGroupsDisplay() {
+    scoringGroupAdapter =
+        new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext()));
+
+    binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
   }
 
   private void bindEndTurnButton() {
@@ -148,76 +156,79 @@ public class GameFragment extends Fragment {
 
   private void bindSubmitChoice() {
     binding.submitChoiceButton.setOnClickListener((v) -> {
-      int[][] frozenGroups = getFrozenGroups();
 
       viewModel.submitRollChoice(frozenGroups, finished);
+      frozenGroups.clear();
+      binding.diceContainer.removeAllViews();
+      binding.endTurnButton.setChecked(false);
+      for (ImageButton button : diceButtons) {
+        button.setTag(false);
+        button.getDrawable().setAlpha(255);
+      }
+      refreshGroupsDisplay();
+//      scoringGroupAdapter.updateScoringGroups(frozenGroupsList);
+//      binding.scoringGroupsList.setVisibility(View.GONE);
     });
   }
 
   private void bindClearButton() {
     binding.clearButton.setOnClickListener((v) -> {
       frozenGroups.clear();
+      for (ImageButton button : diceButtons) {
+        button.setTag(false);
+        button.getDrawable().setAlpha(255);
+      }
+      refreshGroupsDisplay();
     });
   }
 
   private void updateUi(Game game) {
-    this.game = game;
-    PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers(),
-        game.getCurrentTurn());
-    binding.players.setAdapter(adapter);
-    switch (game.getState()) {
-      case PRE_GAME:
-        for (ImageButton button : diceButtons) {
-          button.setEnabled(false);
-          button.setImageDrawable(null);
-        }
-        break;
-      case IN_PLAY:
-        if (game.getCurrentTurn().getLastRoll() != null && game.getCurrentTurn().getUser()
-            .equals(user)) {
-          List<Die> dice = game.getCurrentTurn().getLastRoll().getDice();
+    if (this.game == null
+        || this.game.getState() != game.getState()
+        || this.game.getPlayers().size() != game.getPlayers().size()
+        || this.game.getRollCount() != game.getRollCount()) {
+      this.game = game;
+      PlayerAdapter adapter = new PlayerAdapter(requireContext(), game.getPlayers(),
+          game.getCurrentTurn());
+      binding.players.setAdapter(adapter);
+      binding.diceContainer.removeAllViews();
+      switch (game.getState()) {
+        case PRE_GAME:
+          break;
+        case IN_PLAY:
+          if (game.getCurrentTurn().getLastRoll() != null && game.getCurrentTurn().getUser()
+              .equals(user)) {
+            List<Die> dice = game.getCurrentTurn().getLastRoll().getDice();
+            diceButtons = dice
+                .stream()
+                .map((die) -> {
+                  ImageButton button = (ImageButton) getLayoutInflater().inflate(R.layout.die_button,
+                      binding.diceContainer, false);
+                  button.getDrawable().setLevel(die.getValue());
+                  button.setOnClickListener((v) -> {
+                    Boolean selected = (Boolean) button.getTag();
+                    if (selected == null || !selected) {
+                      button.getDrawable().setAlpha(64);
+                      button.setTag(true);
+                    } else {
+                      button.getDrawable().setAlpha(255);
+                      button.setTag(false);
+                    }
 
-          for (int i = 0; i < diceButtons.length; i++) {
-            if (i < dice.size()) {
-              Die die = dice.get(i);
-
-              ImageButton button = diceButtons[i];
-              button.setVisibility(View.VISIBLE);
-              button.setEnabled(true);
-              button.getDrawable().setLevel(die.getValue());
-              button.setOnClickListener((v) -> {
-                Boolean selected = (Boolean) button.getTag();
-                if (selected == null || !selected) {
-                  button.getDrawable().setAlpha(64);
-                  button.setTag(true);
-                } else {
-                  button.getDrawable().setAlpha(255);
-                  button.setTag(false);
-                }
-
-              });
-
-            } else {
-              diceButtons[i].setVisibility(View.INVISIBLE); // Hide button
-              diceButtons[i].setEnabled(false);
-            }
+                  });
+                  binding.diceContainer.addView(button);
+                  return button;
+                })
+                .toArray(ImageButton[]::new);
           }
-        } else {
-          for (ImageButton button : diceButtons) {
-            button.setVisibility(View.INVISIBLE);
-          }
-        }
-        break;
-      case FINISHED:
-        for (ImageButton button : diceButtons) {
-          button.setEnabled(false);
-          button.setImageDrawable(null);
-        }
-        break;
+          break;
+        case FINISHED:
+          break;
 
-      default:
-        throw new IllegalStateException("Unexpected game state: " + game.getState());
+        default:
+          throw new IllegalStateException("Unexpected game state: " + game.getState());
 
+      }
     }
   }
 
@@ -230,5 +241,14 @@ public class GameFragment extends Fragment {
   private int[][] getFrozenGroups() {
     return frozenGroups.toArray(new int[0][0]); // Convert to 2D array for API.
   }
+
+  private List<int[]> convertToList(int[][] array) {
+    List<int[]> list = new ArrayList<>();
+    for (int[] group : array) {
+      list.add(group);
+    }
+    return list;
+  }
+
 
 }
