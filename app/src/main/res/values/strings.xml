@@ -7,7 +7,7 @@
   <string name="player_display_name">player</string>
   <string name="opponent_display_name">Opponent</string>
   <string name="game_fragment_label">Play Game</string>
-  <string name="quit_game_label">Home</string>
+  <string name="quit_game_label">Farkle</string>
   <string name="end_turn_label">End Turn</string>
   <string name="submit_choice_label">Submit</string>
   <string name="dice_1_label">Dice 1</string>
