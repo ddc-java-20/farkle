@@ -30,7 +30,7 @@ public class UserService implements AbstractUserService {
   }
 
   @Override
-  public User getOrCreate(String authKey, String displayName) {
+  public synchronized User getOrCreate(String authKey, String displayName) {
     return userRepository
         .findByAuthKey(authKey)
         .orElseGet(() -> {

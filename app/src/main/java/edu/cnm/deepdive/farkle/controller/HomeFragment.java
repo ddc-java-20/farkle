@@ -13,11 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle.State;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.farkle.R;
 import edu.cnm.deepdive.farkle.databinding.FragmentHomeBinding;
+import edu.cnm.deepdive.farkle.viewmodel.GameViewModel;
 import edu.cnm.deepdive.farkle.viewmodel.LoginViewModel;
 
 @AndroidEntryPoint
@@ -25,7 +27,8 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
   private static final String TAG = HomeFragment.class.getSimpleName();
   private FragmentHomeBinding binding;
-  private LoginViewModel viewModel;
+  private LoginViewModel loginViewModel;
+  private GameViewModel gameViewModel;
 
   @Nullable
   @Override
@@ -38,10 +41,10 @@ public class HomeFragment extends Fragment implements MenuProvider {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    viewModel = new ViewModelProvider(requireActivity())
+    loginViewModel = new ViewModelProvider(requireActivity())
         .get(LoginViewModel.class);
 
-    viewModel
+    loginViewModel
         .getAccount()
         .observe(getViewLifecycleOwner(), (account) -> {
           if (account != null) {
@@ -51,6 +54,8 @@ public class HomeFragment extends Fragment implements MenuProvider {
                 .navigate(HomeFragmentDirections.navigateToPreLoginFragment());
           }
         });
+    LifecycleOwner owner = getViewLifecycleOwner();
+    gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
 
     binding.startGameButton.setOnClickListener(v -> {
       Log.d(TAG, "Start Game button clicked");
@@ -76,7 +81,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
   public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
     boolean handled = false;
     if (menuItem.getItemId() == R.id.sign_out) {
-      viewModel.signOut();
+      loginViewModel.signOut();
       handled = true;
     }
     return handled;
