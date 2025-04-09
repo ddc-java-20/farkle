@@ -40,92 +40,6 @@
     app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
     android:orientation="horizontal"/>
 
-
-  <!-- <ImageButton
-    android:id="@+id/dice_1"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toStartOf="@id/dice_2"
-    app:layout_constraintDimensionRatio="1:1" />
-
-  <ImageButton
-    android:id="@+id/dice_2"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toEndOf="@id/dice_1"
-    app:layout_constraintEnd_toStartOf="@id/dice_3"
-    app:layout_constraintDimensionRatio="1:1" />
-
-  <ImageButton
-    android:id="@+id/dice_3"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toEndOf="@id/dice_2"
-    app:layout_constraintEnd_toStartOf="@id/dice_4"
-    app:layout_constraintDimensionRatio="1:1" />
-
-  <ImageButton
-    android:id="@+id/dice_4"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toEndOf="@id/dice_3"
-    app:layout_constraintEnd_toStartOf="@id/dice_5"
-    app:layout_constraintDimensionRatio="1:1" />
-
-  <ImageButton
-    android:id="@+id/dice_5"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toEndOf="@id/dice_4"
-    app:layout_constraintEnd_toStartOf="@id/dice_6"
-    app:layout_constraintDimensionRatio="1:1" />
-
-  <ImageButton
-    android:id="@+id/dice_6"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:maxWidth="64dp"
-    android:maxHeight="64dp"
-    android:layout_margin="4dp"
-    android:src="@drawable/dice_faces"
-    android:background="?android:selectableItemBackgroundBorderless"
-    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_top"
-    app:layout_constraintStart_toEndOf="@id/dice_5"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintDimensionRatio="1:1" />
-  -->
-
   <ListView
     android:id="@+id/scoring_groups_list"
     android:layout_width="match_parent"
@@ -156,7 +70,7 @@
     android:id="@+id/select_group_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/half_dynamic_spacing"
+    android:layout_margin="@dimen/half_dynamic_spacing"
     app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintStart_toEndOf="@id/end_turn_button"
     app:layout_constraintEnd_toStartOf="@id/submit_choice_button"
@@ -167,7 +81,7 @@
     android:id="@+id/submit_choice_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/half_dynamic_spacing"
+    android:layout_margin="@dimen/half_dynamic_spacing"
     app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintStart_toEndOf="@id/select_group_button"
     app:layout_constraintEnd_toEndOf="parent"
@@ -178,17 +92,18 @@
     android:id="@+id/clear_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/half_dynamic_spacing"
+    android:layout_margin="@dimen/half_dynamic_spacing"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toStartOf="@id/quit_button"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintHorizontal_chainStyle="spread"
     android:text="@string/clear_scoring_groups_label"/>
+
   <Button
     android:id="@+id/quit_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/half_dynamic_spacing"
+    android:layout_margin="@dimen/half_dynamic_spacing"
     app:layout_constraintStart_toEndOf="@id/clear_button"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
