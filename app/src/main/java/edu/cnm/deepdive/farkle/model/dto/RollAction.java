@@ -1,33 +1,17 @@
 package edu.cnm.deepdive.farkle.model.dto;
 
 import com.google.gson.annotations.Expose;
+import java.util.LinkedList;
+import java.util.List;
 
-public class RollAction {
+/**
+ * @param frozenGroups Frozen dice groups.
+ * @param finished     Whether the turn is finished.
+ */
+public record RollAction(@Expose List<int[]> frozenGroups, @Expose boolean finished) {
 
-  @Expose
-  private int[][] frozenGroups; // Frozen dice groups.
-
-  @Expose
-  private boolean finished; // Whether the turn is finished.
-
-  public RollAction(int[][] frozenGroups, boolean finished) {
-    this.frozenGroups = frozenGroups;
-    this.finished = finished;
-  }
-
-  public int[][] getFrozenGroups() {
-    return frozenGroups;
-  }
-
-  public void setFrozenGroups(int[][] frozenGroups) {
-    this.frozenGroups = frozenGroups;
-  }
-
-  public boolean isFinished() {
-    return finished;
-  }
-
-  public void setFinished(boolean finished) {
+  public RollAction(List<int[]> frozenGroups, boolean finished) {
+    this.frozenGroups = new LinkedList<>(frozenGroups);
     this.finished = finished;
   }
 }

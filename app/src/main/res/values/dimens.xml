@@ -4,4 +4,5 @@
   <dimen name="half_dynamic_spacing">8dp</dimen>
   <dimen name="image_button_size">48dp</dimen>
   <dimen name="half_static_spacing">4dp</dimen>
+  <dimen name="dice_height">72dp</dimen>
 </resources>

@@ -12,6 +12,7 @@ import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.RollAction;
 import edu.cnm.deepdive.farkle.model.dto.User;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import java.util.List;
 import java.util.UUID;
 import edu.cnm.deepdive.farkle.service.GameService;
 import javax.inject.Inject;
@@ -70,7 +71,7 @@ public class GameViewModel extends ViewModel implements DefaultLifecycleObserver
         );
   }
 
-  public void submitRollChoice(int[][] frozenGroups, boolean finished) {
+  public void submitRollChoice(List<int[]> frozenGroups, boolean finished) {
     RollAction rollAction = new RollAction(frozenGroups, finished);
     //noinspection DataFlowIssue
     gameService.freezeOrContinue(game.getValue().getKey(), rollAction)
