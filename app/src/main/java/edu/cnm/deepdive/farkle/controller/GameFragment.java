@@ -22,10 +22,12 @@ import edu.cnm.deepdive.farkle.model.dto.Die;
 import edu.cnm.deepdive.farkle.model.dto.Game;
 import edu.cnm.deepdive.farkle.model.dto.State;
 import edu.cnm.deepdive.farkle.model.dto.User;
+import edu.cnm.deepdive.farkle.service.ScoreMaster;
 import edu.cnm.deepdive.farkle.viewmodel.GameViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.inject.Inject;
 
 
 /**
@@ -53,21 +55,15 @@ public class GameFragment extends Fragment {
   private Game game;
   private User user;
 
+  @Inject
+  ScoreMaster scoreMaster;
+
   @Override
   public View onCreateView(
       LayoutInflater inflater,
       ViewGroup container,
       Bundle savedInstanceState) {
     binding = FragmentGameBinding.inflate(inflater, container, false);
-
-//    diceButtons = new ImageButton[]{
-//        binding.dice1,
-//        binding.dice2,
-//        binding.dice3,
-//        binding.dice4,
-//        binding.dice5,
-//        binding.dice6
-//    };
 
     bindEndTurnButton();
 
@@ -136,7 +132,7 @@ public class GameFragment extends Fragment {
 
   private void refreshGroupsDisplay() {
     scoringGroupAdapter =
-        new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext()));
+        new ScoringGroupAdapter(requireContext(), frozenGroups, scoreMaster);
 
     binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
   }
