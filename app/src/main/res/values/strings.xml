@@ -21,4 +21,12 @@
   <string name="select_group_label">Save Dice</string>
   <string name="clear_scoring_groups_label">Clear</string>
   <string name="app_logo_description">Farkle app launcher</string>
+  <string name="server_side_stack">Server-side</string>
+  <string name="android_core">Android</string>
+  <string name="ui_label">UI/ Client-side</string>
+  <string name="android_core_logo">Android Core Logo</string>
+  <string name="android_core_label">Android Core visual representation</string>
+  <string name="android_core_display">ANDROID</string>
+  <string name="database_layer">Database Layer</string>
+  <string name="security_layer">Security Layer</string>
 </resources>
