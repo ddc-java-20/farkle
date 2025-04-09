@@ -20,4 +20,5 @@
   <color name="save_color">#FF008000</color>
   <color name="active_player_highlight">#FF5722</color>
   <color name="default_background">#F5F2F5</color>
+  <color name="start_button_background_color">#E8DFFF</color>
 </resources>
