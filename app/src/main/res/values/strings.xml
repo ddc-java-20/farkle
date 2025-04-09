@@ -6,8 +6,8 @@
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="player_display_name">player</string>
   <string name="opponent_display_name">Opponent</string>
-  <string name="game_fragment_label">Farkle</string>
-  <string name="quit_game_label">Home</string>
+  <string name="game_fragment_label">Play Game</string>
+  <string name="quit_game_label">Farkle</string>
   <string name="end_turn_label">End Turn</string>
   <string name="submit_choice_label">Submit</string>
   <string name="dice_1_label">Dice 1</string>
@@ -21,6 +21,22 @@
   <string name="select_group_label">Save Dice</string>
   <string name="clear_scoring_groups_label">Clear</string>
   <string name="app_logo_description">Farkle app launcher</string>
-  <string name="start_game_text">Start Game</string>
-  <string name="app_credits">An android project by:\nAaron Halbig\nMinerva Franco\n Bill Holcombe</string>
+  <string name="server_side_stack">Server-side</string>
+  <string name="android_core">Android</string>
+  <string name="ui_label">UI/ Client-side</string>
+  <string name="android_core_logo">Android Core Logo</string>
+  <string name="android_core_label">Android Core visual representation</string>
+  <string name="android_core_display">ANDROID</string>
+  <string name="database_layer">Database Layer</string>
+  <string name="security_layer">Security Layer</string>
+  <string name="dependencies_diagram">Android App\nDevelopment</string>
+  <string name="programming_language_diagram">PROGRAMMING LANGUAGE</string>
+  <string name="java_icon_text">Java</string>
+  <string name="kotlin_icon_text">Kotlin</string>
+  <string name="tool_kit_diagram_category">TOOL KIT</string>
+  <string name="android_studio_dev_tools_diagram_text"><![CDATA[Android Studio & Development\nTools]]></string>
+  <string name="sdk_diagram_category">SDK</string>
+  <string name="android_sdk_icon_text">Android SDK</string>
+  <string name="android_studio_dev_tools_icon">android</string>
+  <string name="kotlin_logo">kotlin_logo</string>
 </resources>

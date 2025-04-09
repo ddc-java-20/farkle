@@ -25,7 +25,7 @@
       android:shadowDx="2"
       android:shadowDy="2"
       android:shadowRadius="4"
-      android:text="Android App\nDevelopment"
+      android:text="@string/dependencies_diagram"
       android:textColor="#FFFFFF"
       android:textSize="24sp"
       android:textStyle="bold"
@@ -38,7 +38,7 @@
       android:fontFamily="sans-serif-medium"
       android:paddingHorizontal="16dp"
       android:paddingVertical="8dp"
-      android:text="PROGRAMMING LANGUAGE"
+      android:text="@string/programming_language_diagram"
       android:textColor="#FFFFFF"
       android:textSize="14sp"
       android:textStyle="bold"
@@ -68,7 +68,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:fontFamily="sans-serif-medium"
-          android:text="Java"
+          android:text="@string/java_icon_text"
           android:textColor="#FFFFFF"
           android:textSize="18sp"
           android:layout_marginStart="16dp"/>
@@ -84,6 +84,7 @@
         <ImageView
           android:layout_width="48dp"
           android:layout_height="48dp"
+          android:contentDescription="@string/kotlin_logo"
           android:src="@drawable/kotlin_logo"
           android:background="@drawable/rounded_circle_gradient_right"
           android:padding="8dp"/>
@@ -92,7 +93,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:fontFamily="sans-serif-medium"
-          android:text="Kotlin"
+          android:text="@string/kotlin_icon_text"
           android:textColor="#FFFFFF"
           android:textSize="18sp"
           android:layout_marginStart="16dp"/>
@@ -108,7 +109,7 @@
       android:fontFamily="sans-serif-medium"
       android:paddingHorizontal="16dp"
       android:paddingVertical="8dp"
-      android:text="TOOL KIT"
+      android:text="@string/tool_kit_diagram_category"
       android:textColor="#FFFFFF"
       android:textSize="14sp"
       android:textStyle="bold"
@@ -124,6 +125,7 @@
       <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:contentDescription="@string/android_studio_dev_tools_icon"
         android:src="@drawable/android_studio_logo"
         android:background="@drawable/rounded_circle_gradient_toolkit"
         android:padding="8dp"/>
@@ -131,8 +133,7 @@
       <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:text="Android Studio &amp; Development\nTools"
+        android:text="@string/android_studio_dev_tools_diagram_text"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:layout_marginStart="16dp"/>
@@ -146,7 +147,7 @@
       android:fontFamily="sans-serif-medium"
       android:paddingHorizontal="16dp"
       android:paddingVertical="8dp"
-      android:text="SDK"
+      android:text="@string/sdk_diagram_category"
       android:textColor="#FFFFFF"
       android:textSize="14sp"
       android:textStyle="bold"
@@ -162,6 +163,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/android_sdk_logo"
+        android:contentDescription="@string/android_core_logo"
         android:background="@drawable/rounded_circle_gradient_sdk"
         android:padding="8dp"/>
 
@@ -169,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:text="Android SDK"
+        android:text="@string/android_sdk_icon_text"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:layout_marginStart="16dp"/>

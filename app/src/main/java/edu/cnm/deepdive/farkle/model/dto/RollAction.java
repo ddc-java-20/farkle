@@ -14,4 +14,5 @@ public record RollAction(@Expose List<int[]> frozenGroups, @Expose boolean finis
     this.frozenGroups = new LinkedList<>(frozenGroups);
     this.finished = finished;
   }
+
 }
