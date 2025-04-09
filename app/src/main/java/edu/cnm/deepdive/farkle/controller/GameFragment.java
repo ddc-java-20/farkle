@@ -15,6 +15,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import dagger.hilt.android.AndroidEntryPoint;
 import edu.cnm.deepdive.farkle.adapter.PlayerAdapter;
+import edu.cnm.deepdive.farkle.adapter.ScoringGroupAdapter;
 import edu.cnm.deepdive.farkle.databinding.FragmentGameBinding;
 import edu.cnm.deepdive.farkle.model.dto.Die;
 import edu.cnm.deepdive.farkle.model.dto.Game;
@@ -32,6 +33,7 @@ public class GameFragment extends Fragment {
   private FragmentGameBinding binding;
   private GameViewModel viewModel;
   private boolean finished = false;
+  private ScoringGroupAdapter scoringGroupAdapter;
   private List<int[]> frozenGroups = new ArrayList<>();
   private ImageButton[] diceButtons;
   private Game game;
@@ -83,6 +85,11 @@ public class GameFragment extends Fragment {
       this.user = user;
     });
 
+    scoringGroupAdapter = new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext())
+    );
+
+    binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
+
   }
 
   private void bindSelectGroupButton() {
@@ -122,6 +129,10 @@ public class GameFragment extends Fragment {
     binding.submitChoiceButton.setOnClickListener((v) -> {
       int[][] frozenGroups = getFrozenGroups();
       viewModel.submitRollChoice(frozenGroups, finished);
+      List<int[]> frozenGroupsList = convertToList(frozenGroups);
+      frozenGroupsList.clear();
+      scoringGroupAdapter.updateScoringGroups(frozenGroupsList);
+      binding.scoringGroupsList.setVisibility(View.GONE);
     });
   }
 
@@ -201,5 +212,14 @@ public class GameFragment extends Fragment {
   private int[][] getFrozenGroups() {
     return frozenGroups.toArray(new int[0][0]); // Convert to 2D array for API.
   }
+
+  private List<int[]> convertToList(int[][] array) {
+    List<int[]> list = new ArrayList<>();
+    for (int[] group : array) {
+      list.add(group);
+    }
+    return list;
+  }
+
 
 }

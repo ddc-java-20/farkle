@@ -116,6 +116,16 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintDimensionRatio="1:1" />
 
+  <ListView
+    android:id="@+id/scoring_groups_list"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_margin="8dp"
+    app:layout_constraintTop_toBottomOf="@id/dice_1"
+    app:layout_constraintBottom_toTopOf="@id/horizontal_guideline_bottom"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    tools:listitem="@layout/item_scoring_group" />
 
 
   <Switch
