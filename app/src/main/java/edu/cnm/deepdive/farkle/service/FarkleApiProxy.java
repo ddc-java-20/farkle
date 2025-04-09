@@ -29,13 +29,12 @@ public interface FarkleApiProxy {
 
   @POST("games/{gameKey}/actions")
   Single<Boolean> freezeOrContinue(
-      @Path("gameKey") UUID gameKey,       // Pass the gameKey as part of the URL.
-      @Body RollAction action,              // Pass RollAction as the body of the request.
+      @Path("gameKey") UUID gameKey,
+      @Body RollAction action,
       @Header("Authorization") String bearerToken
   );
 
   @POST("games")
   Single<Game> startOrJoin(@Header("Authorization") String bearerToken);
 
-//  get the Users.me from the server side
 }

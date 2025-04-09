@@ -162,8 +162,6 @@ public class GameFragment extends Fragment {
         button.getDrawable().setAlpha(255);
       }
       refreshGroupsDisplay();
-//      scoringGroupAdapter.updateScoringGroups(frozenGroupsList);
-//      binding.scoringGroupsList.setVisibility(View.GONE);
     });
   }
 
@@ -235,7 +233,7 @@ public class GameFragment extends Fragment {
   }
 
   private int[][] getFrozenGroups() {
-    return frozenGroups.toArray(new int[0][0]); // Convert to 2D array for API.
+    return frozenGroups.toArray(new int[0][0]);
   }
 
   private List<int[]> convertToList(int[][] array) {
