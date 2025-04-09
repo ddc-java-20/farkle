@@ -129,15 +129,19 @@ public class GameFragment extends Fragment {
       for (ImageButton button : diceButtons) {
         button.setTag(false); // Reset toggles.
       }
-      scoringGroupAdapter =
-          new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext()));
-
-      binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
+      refreshGroupsDisplay();
 
       Snackbar.make(binding.getRoot(),
           "Scoring group added. Select more dice or click Submit Choice.",
           Snackbar.LENGTH_SHORT).show();
     });
+  }
+
+  private void refreshGroupsDisplay() {
+    scoringGroupAdapter =
+        new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext()));
+
+    binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
   }
 
   private void bindEndTurnButton() {
@@ -171,6 +175,7 @@ public class GameFragment extends Fragment {
         button.setTag(false);
         button.getDrawable().setAlpha(255);
       }
+      refreshGroupsDisplay();
     });
   }
 
