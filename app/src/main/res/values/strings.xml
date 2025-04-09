@@ -6,7 +6,7 @@
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="player_display_name">player</string>
   <string name="opponent_display_name">Opponent</string>
-  <string name="game_fragment_label">Play Game</string>
+  <string name="game_fragment_label">Farkle</string>
   <string name="quit_game_label">Home</string>
   <string name="end_turn_label">End Turn</string>
   <string name="submit_choice_label">Submit</string>

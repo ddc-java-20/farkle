@@ -55,7 +55,7 @@
   <fragment
     android:id="@+id/game_fragment"
     android:name="edu.cnm.deepdive.farkle.controller.GameFragment"
-    android:label="@string/quit_game_label"
+    android:label="@string/game_fragment_label"
     tools:layout="@layout/fragment_game">
 
     <action
