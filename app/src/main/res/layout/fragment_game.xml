@@ -8,7 +8,7 @@
   tools:context=".controller.GameFragment">
 
   <androidx.constraintlayout.widget.Guideline
-    android:id="@+id/horizontal_guideline"
+    android:id="@+id/horizontal_guideline_top"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -121,6 +121,7 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_margin="8dp"
+    android:stackFromBottom="true"
     app:layout_constraintTop_toBottomOf="@id/dice_1"
     app:layout_constraintBottom_toTopOf="@id/horizontal_guideline_bottom"
     app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +134,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/half_dynamic_spacing"
-    app:layout_constraintTop_toBottomOf="@id/dice_5"
+    app:layout_constraintTop_toBottomOf="@id/horizontal_guideline_bottom"
     app:layout_constraintEnd_toStartOf="@id/select_group_button"
     app:layout_constraintBottom_toTopOf="@id/quit_button"
     app:layout_constraintStart_toStartOf="parent"

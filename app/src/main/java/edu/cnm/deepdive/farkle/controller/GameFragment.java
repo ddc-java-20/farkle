@@ -98,11 +98,6 @@ public class GameFragment extends Fragment {
       this.user = user;
     });
 
-    scoringGroupAdapter = new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext())
-    );
-
-    binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
-
   }
 
 
@@ -134,6 +129,11 @@ public class GameFragment extends Fragment {
       for (ImageButton button : diceButtons) {
         button.setTag(false); // Reset toggles.
       }
+      scoringGroupAdapter =
+          new ScoringGroupAdapter(requireContext(), frozenGroups, LayoutInflater.from(requireContext()));
+
+      binding.scoringGroupsList.setAdapter(scoringGroupAdapter);
+
       Snackbar.make(binding.getRoot(),
           "Scoring group added. Select more dice or click Submit Choice.",
           Snackbar.LENGTH_SHORT).show();
@@ -167,6 +167,10 @@ public class GameFragment extends Fragment {
   private void bindClearButton() {
     binding.clearButton.setOnClickListener((v) -> {
       frozenGroups.clear();
+      for (ImageButton button : diceButtons) {
+        button.setTag(false);
+        button.getDrawable().setAlpha(255);
+      }
     });
   }
 
