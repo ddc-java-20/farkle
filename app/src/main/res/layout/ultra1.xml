@@ -1,0 +1,181 @@
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/rounded_gradient_background">
+
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_gradient_background"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:layout_centerInParent="true">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/rounded_top_purple"
+      android:fontFamily="sans-serif-condensed-medium"
+      android:gravity="center"
+      android:paddingHorizontal="48dp"
+      android:paddingVertical="16dp"
+      android:shadowColor="#22000000"
+      android:shadowDx="2"
+      android:shadowDy="2"
+      android:shadowRadius="4"
+      android:text="Android App\nDevelopment"
+      android:textColor="#FFFFFF"
+      android:textSize="24sp"
+      android:textStyle="bold"
+      android:layout_marginBottom="24dp"/>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/rounded_purple_label"
+      android:fontFamily="sans-serif-medium"
+      android:paddingHorizontal="16dp"
+      android:paddingVertical="8dp"
+      android:text="PROGRAMMING LANGUAGE"
+      android:textColor="#FFFFFF"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:layout_marginBottom="16dp">
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginEnd="32dp">
+
+        <ImageView
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:src="@drawable/java_logo"
+          android:background="@drawable/rounded_circle_gradient_left"
+          android:padding="8dp"/>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="sans-serif-medium"
+          android:text="Java"
+          android:textColor="#FFFFFF"
+          android:textSize="18sp"
+          android:layout_marginStart="16dp"/>
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:src="@drawable/kotlin_logo"
+          android:background="@drawable/rounded_circle_gradient_right"
+          android:padding="8dp"/>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="sans-serif-medium"
+          android:text="Kotlin"
+          android:textColor="#FFFFFF"
+          android:textSize="18sp"
+          android:layout_marginStart="16dp"/>
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/rounded_purple_label"
+      android:fontFamily="sans-serif-medium"
+      android:paddingHorizontal="16dp"
+      android:paddingVertical="8dp"
+      android:text="TOOL KIT"
+      android:textColor="#FFFFFF"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:layout_marginBottom="16dp">
+
+      <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/android_studio_logo"
+        android:background="@drawable/rounded_circle_gradient_toolkit"
+        android:padding="8dp"/>
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="Android Studio &amp; Development\nTools"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginStart="16dp"/>
+
+    </LinearLayout>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/rounded_purple_label"
+      android:fontFamily="sans-serif-medium"
+      android:paddingHorizontal="16dp"
+      android:paddingVertical="8dp"
+      android:text="SDK"
+      android:textColor="#FFFFFF"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
+
+      <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/android_sdk_logo"
+        android:background="@drawable/rounded_circle_gradient_sdk"
+        android:padding="8dp"/>
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="Android SDK"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginStart="16dp"/>
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+</RelativeLayout>
