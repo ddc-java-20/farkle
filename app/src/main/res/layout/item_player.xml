@@ -12,7 +12,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/half_dynamic_spacing"
-    android:layout_weight="1"
+    android:layout_weight="2"
     style="@style/Player"
     tools:text="JoHn"/>
 
@@ -24,6 +24,8 @@
     android:layout_weight="1"
     style="@style/Player.Score"
     tools:text="100000000"/>
+
+
 
 
 

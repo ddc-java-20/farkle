@@ -4,101 +4,44 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import edu.cnm.deepdive.farkle.R;
+import edu.cnm.deepdive.farkle.databinding.ItemScoringGroupBinding;
+import edu.cnm.deepdive.farkle.service.ScoreMaster;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ScoringGroupAdapter extends BaseAdapter {
+public class ScoringGroupAdapter extends ArrayAdapter<int[]> {
 
-  private final Context context;
-  private final List<int[]> scoringGroups;
   private final LayoutInflater inflater;
+  private final ScoreMaster scoreMaster;
 
+  public ScoringGroupAdapter(Context context, List<int[]> scoringGroups, ScoreMaster scoreMaster) {
+    super(context, R.layout.item_scoring_group, scoringGroups);
 
-  public ScoringGroupAdapter(Context context, List<int[]> scoringGroups, LayoutInflater inflater) {
-    this.context = context;
-    this.scoringGroups = scoringGroups;
-    this.inflater = inflater;
-  }
-
-  @Override
-  public int getCount() {
-    return scoringGroups.size();
-  }
-
-  @Override
-  public Object getItem(int position) {
-    return scoringGroups.get(position);
-  }
-
-  @Override
-  public long getItemId(int position) {
-    return position;
+    this.inflater = LayoutInflater.from(context);
+    this.scoreMaster = scoreMaster;
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    ViewHolder holder;
-
-    if (convertView == null) {
-      convertView = inflater.inflate(R.layout.item_scoring_group, parent, false);
-
-      // Initialize the holder and attach the views
-      holder = new ViewHolder();
-      holder.diceViews = new ImageView[] {
-          convertView.findViewById(R.id.die_1),
-          convertView.findViewById(R.id.die_2),
-          convertView.findViewById(R.id.die_3),
-          convertView.findViewById(R.id.die_4),
-          convertView.findViewById(R.id.die_5),
-          convertView.findViewById(R.id.die_6)
-      };
-
-      convertView.setTag(holder); // Store the holder as a tag on the view for future reuse.
-    } else {
-      // Reuse the already-created view
-      holder = (ViewHolder) convertView.getTag(); // Retrieve holder from tag.
-    }
-
-    // Populate dice values into the view
-    populateRow(holder, scoringGroups.get(position));
-
-    return convertView;
-  }
-
-  private void populateRow(ViewHolder holder, int[] diceValues) {
-    for (int i = 0; i < holder.diceViews.length; i++) {
-      if (i < diceValues.length) {
-        holder.diceViews[i].setVisibility(View.VISIBLE);
-        holder.diceViews[i].setImageResource(getDiceImage(diceValues[i]));
-      } else {
-        holder.diceViews[i].setVisibility(View.GONE);
-      }
-    }
-  }
-
-  private int getDiceImage(int value) {
-    switch (value) {
-      case 1: return R.drawable.dice_face_1;
-      case 2: return R.drawable.dice_face_2;
-      case 3: return R.drawable.dice_face_3;
-      case 4: return R.drawable.dice_face_4;
-      case 5: return R.drawable.dice_face_5;
-      case 6: return R.drawable.dice_face_6;
-      default: throw new IllegalArgumentException("Invalid dice value: " + value);
-    }
-  }
-
-  public void updateScoringGroups(List<int[]> newGroups) {
-    scoringGroups.clear();
-    scoringGroups.addAll(newGroups);
-    notifyDataSetChanged();
-  }
-
-  // View holder to store references to the dice views.
-  private static class ViewHolder {
-    ImageView[] diceViews;
+    ItemScoringGroupBinding binding = (convertView == null)
+        ? ItemScoringGroupBinding.inflate(inflater, parent, false)
+        : ItemScoringGroupBinding.bind(convertView);
+    int[] dice = getItem(position);
+    Arrays.stream(dice)
+        .forEach((value) -> {
+          ImageView dieImage = (ImageView) inflater.inflate(R.layout.item_group_die, binding.diceContainer, false);
+          dieImage.getDrawable().setLevel(value);
+          binding.diceContainer.addView(dieImage);
+        });
+    int score = scoreMaster.getScore(Arrays.stream(dice).sorted().boxed().collect(Collectors.toList()));
+    binding.score.setText(String.valueOf(score));
+    // TODO: 4/9/2025 look up dice combination in scoring table and use binding.score.setValue() *must be a string*
+    return binding.getRoot();
   }
 
 }

@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
-    //Adding our own toolbar
+
     setupNavigation();
   }
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void setupNavigation() {
     setSupportActionBar(binding.toolbar);
-    appBarConfig = new AppBarConfiguration.Builder(R.id.home_fragment, R.id.pre_login_fragment, R.id.login_fragment)
+    appBarConfig = new AppBarConfiguration.Builder(R.id.home_fragment, R.id.pre_login_fragment, R.id.login_fragment, R.id.game_fragment)
         .build();
     navController =((NavHostFragment) binding.navHostContainer.getFragment()).getNavController();
     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfig);

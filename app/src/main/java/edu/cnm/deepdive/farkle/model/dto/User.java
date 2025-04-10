@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import java.util.UUID;
 
 public class User {
-//Can be used to update profile
 
   @Expose(serialize = false)
   private UUID key;
